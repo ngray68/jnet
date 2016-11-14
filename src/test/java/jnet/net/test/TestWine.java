@@ -2,9 +2,11 @@ package jnet.net.test;
 
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
+import jnet.net.MeanSquaredError;
+import jnet.algorithm.LearningAlgorithm;
+import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataSet;
-import jnet.net.Network;
-import jnet.net.Vector;
+import jnet.net.MultilayerPerceptronNetwork;
 
 public class TestWine extends TestCase {
 
@@ -13,8 +15,7 @@ public class TestWine extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		dataSet = new DataSet();
-		dataSet.readFromFile(dataFileName);
+		dataSet = DataSet.createFromFile(dataFileName);
 		dataSet.normalize();
 	}
 
@@ -24,12 +25,14 @@ public class TestWine extends TestCase {
 	
 	public void testWine() {
 		//fail("Not yet implemented");
-		Network network = new Network(new int[] {13, 17, 3});
-		CostFunction costFunction = (output, expOutput) -> { return Vector.add(output, Vector.multiply(-1.0, expOutput)); };
-		int numEpochs = 5000;
-		double learningRate = 0.1;
-		int batchSize = 20;
-		network.stochasticGradientDescent(dataSet, costFunction, numEpochs, batchSize, learningRate);
+		MultilayerPerceptronNetwork network = new MultilayerPerceptronNetwork(new int[] {13, 6, 3});
+		CostFunction costFunction = new MeanSquaredError();
+		int numEpochs = 500;
+		double learningRate = 0.25;
+		int batchSize = 5;
+		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, 0);
+		network.train(dataSet, sgd, costFunction);
+		//network.stochasticGradientDescent(dataSet, costFunction, numEpochs, batchSize, learningRate);
 	}
 
 }

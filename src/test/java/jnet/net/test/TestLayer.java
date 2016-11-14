@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.data.DataInstance;
 import jnet.net.Layer;
+import jnet.net.MeanSquaredError;
 import jnet.net.Vector;
 
 public class TestLayer extends TestCase {
@@ -29,7 +30,7 @@ public class TestLayer extends TestCase {
 
 	public void testBackPropagateDataInstanceCostFunction() {
 		//fail("Not yet implemented");
-		CostFunction costFunction = (expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
+		CostFunction costFunction = new MeanSquaredError();
 		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
 		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);
@@ -46,7 +47,7 @@ public class TestLayer extends TestCase {
 
 	public void testBackPropagateLayer() {
 		//fail("Not yet implemented");
-		CostFunction costFunction = (expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
+		CostFunction costFunction = new MeanSquaredError();
 		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
 		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);
@@ -66,7 +67,7 @@ public class TestLayer extends TestCase {
 
 	public void testGetBiasGradient() {
 		//fail("Not yet implemented");
-		CostFunction costFunction = (expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
+		CostFunction costFunction = new MeanSquaredError();
 		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
 		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);
