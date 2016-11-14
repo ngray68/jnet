@@ -6,7 +6,7 @@ import jnet.net.MeanSquaredError;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataSet;
-import jnet.net.MultilayerPerceptronNetwork;
+import jnet.net.FeedForwardNetwork;
 
 public class TestWine extends TestCase {
 
@@ -25,7 +25,7 @@ public class TestWine extends TestCase {
 	
 	public void testWine() {
 		//fail("Not yet implemented");
-		MultilayerPerceptronNetwork network = new MultilayerPerceptronNetwork(new int[] {13, 6, 3});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {13, 6, 3});
 		CostFunction costFunction = new MeanSquaredError();
 		int numEpochs = 500;
 		double learningRate = 0.25;
