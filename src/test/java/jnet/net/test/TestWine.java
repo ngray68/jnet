@@ -6,16 +6,17 @@ import jnet.net.MeanSquaredError;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataSet;
+import jnet.data.DataSetLoader;
 import jnet.net.FeedForwardNetwork;
 
 public class TestWine extends TestCase {
 
-	private String dataFileName = "./src/test/resources/wine.data";
+	private String dataFileName = "./src/test/resources/wine.csv";
 	private DataSet dataSet;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		dataSet = DataSet.createFromFile(dataFileName);
+		dataSet = DataSetLoader.loadFromFile(dataFileName, "csv", "EEEIIIIIIIIIIIII");
 		dataSet.normalize();
 	}
 

@@ -44,6 +44,8 @@ public class FeedForwardNetwork implements Network {
 			return;
 		}
 		
+		// make sure the data set is shuffled
+		dataSet.shuffle();
 		
 		// split the data set into training, validation and test sets
 		DataSet trainingSet = dataSet.getTrainingSubset();

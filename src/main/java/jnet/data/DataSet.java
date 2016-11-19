@@ -1,9 +1,6 @@
 package jnet.data;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,60 +25,8 @@ public class DataSet {
 	
 /* Public constructors */
 	
-	
-	
 /* Public static methods */
 
-	public static DataSet createFromFile(String fileName) 
-	{
-		
-		DataSet dataSet = new DataSet();
-		BufferedReader buffer = null;
-		try {
-			FileReader reader = new FileReader(fileName);
-			buffer = new BufferedReader(reader);
-			String line;
-			while ((line = buffer.readLine()) != null) {
-				// for now assume each line as 1 expected output
-				// and the rest are the inputs
-				String[] entries = line.split(",");
-				ArrayList<Double> expectedOutputs = new ArrayList<Double>();
-				if (entries[0].equals("1")) {
-					expectedOutputs.add(1.0);
-					expectedOutputs.add(0.0);
-					expectedOutputs.add(0.0);	
-				}
-				else if (entries[0].equals("2")) {
-					expectedOutputs.add(0.0);
-					expectedOutputs.add(1.0);
-					expectedOutputs.add(0.0);	
-				}
-				else if (entries[0].equals("3")) {
-					expectedOutputs.add(0.0);
-					expectedOutputs.add(0.0);
-					expectedOutputs.add(1.0);
-				}
-				
-				ArrayList<Double> inputs = new ArrayList<Double>();
-				for (int i = 1; i < entries.length; ++i) {
-					inputs.add(Double.parseDouble(entries[i]));
-				}
-				DataInstance instance = new DataInstance(inputs, expectedOutputs);
-				dataSet.addInstance(instance);
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			//if (buffer != null)
-			
-		}
-		return dataSet;
-	}
-	
 	public static DataSet create(double trainingSetFraction) throws DataException 
 	{
 		if (trainingSetFraction > 1.0)
@@ -227,7 +172,7 @@ public class DataSet {
 	}
 
 /* Private constructors */
-	
+
 	// Create a new empty data set
 	// with default training, validation and test set fractions
 	private DataSet() {

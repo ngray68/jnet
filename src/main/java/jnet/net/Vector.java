@@ -43,6 +43,14 @@ public class Vector {
 		}
 	}
 		
+	public Vector(int size, double value) {
+		this.size = size;
+		this.elements = new Double[size];
+		for (int i = 0; i < size; ++i) {
+			this.elements[i] = value;
+		}
+	}
+
 	public int getSize() {
 		return size;
 	}

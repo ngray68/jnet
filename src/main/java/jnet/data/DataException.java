@@ -1,5 +1,7 @@
 package jnet.data;
 
+import java.io.IOException;
+
 public class DataException extends Exception {
 
 	/**
@@ -9,6 +11,10 @@ public class DataException extends Exception {
 
 	public DataException(String string) {
 		super(string);
+	}
+
+	public DataException(IOException e) {
+		super(e);
 	}
 
 }
