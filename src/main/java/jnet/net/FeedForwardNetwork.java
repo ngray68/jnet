@@ -83,12 +83,6 @@ public class FeedForwardNetwork implements Network {
 	}
 	
 	@Override
-	public void adjustWeightsAndBiases(List<Matrix> deltaWeight, List<Vector> deltaBias) 
-	{
-		// TODO	
-	}
-	
-	@Override
 	public Layer getInputLayer()
 	{
 		//checkIndex(0);

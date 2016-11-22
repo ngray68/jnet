@@ -86,30 +86,6 @@ public class TestLayer extends TestCase {
 		fail("Not yet implemented");
 	}
 
-	public void testAddBiasGradient() {
-		fail("Not yet implemented");
-	}
-
-	public void testAddWeightGradient() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetActivation() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetActivation() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetPrevious() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetPrevious() {
-		fail("Not yet implemented");
-	}
-
 	public void testGetError() {
 		fail("Not yet implemented");
 	}

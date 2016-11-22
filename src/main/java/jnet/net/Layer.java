@@ -20,8 +20,8 @@ public class Layer {
 	// keep track of gradients over a mini-batch of test data
 	// use the mean of these x learning rate to adjust weights
 	// and biases for the next batch
-	private ArrayList<Vector> biasGradients;
-	private ArrayList<Matrix> weightGradients;
+	//private ArrayList<Vector> biasGradients;
+	//private ArrayList<Matrix> weightGradients;
 
 	// Constructor for layer
 	// Construct the layer and initialize the weights/biases to a random
@@ -86,7 +86,7 @@ public class Layer {
 	public Matrix getWeightGradient() {
 		return Vector.dyadicProduct(error, previous.getActivation());
 	}
-
+/*
 	public void addBiasGradient(Vector biasGradient) {
 		if (biasGradients == null)
 			biasGradients = new ArrayList<Vector>();
@@ -100,7 +100,7 @@ public class Layer {
 		
 		weightGradients.add(weightGradient);
 	}
-
+*/
 	public Vector getActivation() {
 		return activation;
 	}
@@ -129,13 +129,14 @@ public class Layer {
 		this.error = error;
 	}
 
-	public void adjustWeights(double learningRate) {
+	public void adjustWeights(double learningRate, Matrix meanWeightGradient) {
 		if (weights != null) {
-		   assert (weightGradients != null && weightGradients.size() >  0);
-		   weights = Matrix.add(weights, Matrix.multiply(-learningRate/(weightGradients.size()), getSumOfWeightGradients()));
+		   //assert (weightGradients != null && weightGradients.size() >  0);
+		   //weights = Matrix.add(weights, Matrix.multiply(-learningRate/(weightGradients.size()), getSumOfWeightGradients()));
+		   weights = Matrix.add(weights, Matrix.multiply(-learningRate, meanWeightGradient));
 		}
 	}
-
+/*
 	private Matrix getSumOfWeightGradients() {
 		Matrix sum = new Matrix(weights.getNumRows(), weights.getNumCols());
 		for (Matrix weightGradient : weightGradients) {
@@ -143,14 +144,15 @@ public class Layer {
 		}
 		return sum;
 	}
-
-	public void adjustBiases(double learningRate) {
+*/
+	public void adjustBiases(double learningRate, Vector meanBiasGradient) {
 		if (biases != null) {
-			assert (biasGradients != null && biasGradients.size() > 0);
-			this.biases = Vector.add(this.biases, Vector.multiply(-learningRate/(biasGradients.size()), getSumOfBiasGradients()));
+			//assert (biasGradients != null && biasGradients.size() > 0);
+			//this.biases = Vector.add(this.biases, Vector.multiply(-learningRate/(biasGradients.size()), getSumOfBiasGradients()));
+			this.biases = Vector.add(this.biases, Vector.multiply(-learningRate, meanBiasGradient));
 		}
 	}
-
+/*
 	private Vector getSumOfBiasGradients() {
 		Vector sum = new Vector(biases.getSize());
 		for (Vector biasGradient : biasGradients) {
@@ -166,4 +168,5 @@ public class Layer {
 	public void clearBiasGradients() {
 		this.biasGradients = null;
 	}
+	*/
 }

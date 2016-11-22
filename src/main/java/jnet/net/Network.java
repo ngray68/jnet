@@ -42,13 +42,6 @@ public interface Network {
 	public Vector evaluate(DataInstance instance);
 	
 	/**
-	 * Call this method to adjust the network's weights and biases
-	 * @param deltaWeight list of adjustments to weights, one element per Layer
-	 * @param deltaBias list of adjustments to biases, one element per Layer
-	 */
-	public void adjustWeightsAndBiases(List<Matrix> deltaWeight, List<Vector> deltaBias);
-	
-	/**
 	 * Call this method to return a reference to the network's input layer
 	 * @return Layer
 	 */
