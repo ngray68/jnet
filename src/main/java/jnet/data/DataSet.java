@@ -2,21 +2,15 @@ package jnet.data;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 import jnet.net.Vector;
 
 public class DataSet {
 
-	// store the dataInstances in a SortedMap rather than an array
-	// or more basic collection
-	// this allows us to find subsets for each mini-batch easily and
-	// efficiently
-	private SortedMap<Integer, DataInstance> dataInstances;
+	private List<DataInstance> dataInstances;
 	
 	private double trainingSetFraction;
 	private double validationSetFraction;
@@ -68,32 +62,15 @@ public class DataSet {
 	/**
 	 * Method shuffle()
 	 * Randomly shuffles the data instances in the set
-	 * Assumes that keys are assigned contiguously in all data sets
 	 */
 	public void shuffle() 
 	{
-		TreeMap<Integer, DataInstance> shuffledInstances = new TreeMap<Integer, DataInstance>();
-		
-		Iterator<DataInstance> iter = getIterator();
-		int minKey = dataInstances.firstKey();
-		int maxKey = dataInstances.lastKey();
-		DataInstance instance = null;
-		while (instance != null || iter.hasNext()) {
-			if (instance == null)
-			   instance = iter.next();
-			int randomIndex = ThreadLocalRandom.current().nextInt(minKey, maxKey + 1);
-		
-			if (!shuffledInstances.containsKey(randomIndex)) {
-				shuffledInstances.put(randomIndex, instance);
-				instance = null;
-			}
-		}
-		dataInstances = shuffledInstances;
+		Collections.shuffle(dataInstances);
 	}
 	
 	/**
 	 * Method  getTrainingSubset
-	 * @return a DataSet containing the submap of training instances
+	 * @return a DataSet containing the sublist of training instances
 	 *         if the parent set is empty, returns the same empty DataSet
 	 */
 	public DataSet getTrainingSubset() 
@@ -101,12 +78,12 @@ public class DataSet {
 		if (dataInstances.isEmpty())
 			return this;
 		
-		return new DataSet(dataInstances.subMap(0, getNumTrainingInstances()));	
+		return new DataSet(dataInstances.subList(0, getNumTrainingInstances()));	
 	}
 	
 	/**
 	 * Method  getValidationSubset
-	 * @return a DataSet containing the submap of validation instances
+	 * @return a DataSet containing the sublist of validation instances
 	 *         if the parent set is empty, returns the same empty DataSet
 	 */
 	public DataSet getValidationSubset()
@@ -115,12 +92,12 @@ public class DataSet {
 			return this;
 		
 		int startingIndex = getNumTrainingInstances();
-		return new DataSet(dataInstances.subMap(startingIndex, startingIndex + getNumValidationInstances()));
+		return new DataSet(dataInstances.subList(startingIndex, startingIndex + getNumValidationInstances()));
 	}
 	
 	/**
 	 * Method  getTestSubset
-	 * @return a DataSet containing the submap of test instances
+	 * @return a DataSet containing the sublist of test instances
 	 *         if the parent set is empty, returns the same empty DataSet
 	 */
 	public DataSet getTestSubset()
@@ -129,7 +106,7 @@ public class DataSet {
 			return this;
 		
 		int startingIndex = getNumTrainingInstances() + getNumValidationInstances();
-		return new DataSet(dataInstances.subMap(startingIndex, startingIndex + getNumTestInstances()));
+		return new DataSet(dataInstances.subList(startingIndex, startingIndex + getNumTestInstances()));
 	}
 	
 	
@@ -139,26 +116,20 @@ public class DataSet {
 		ArrayList<DataSet> miniBatches = new ArrayList<DataSet>();
 				
 		for (int i = 0; i < dataInstances.size() - miniBatchSize; i= i + miniBatchSize) {
-			DataSet newMiniBatch = new DataSet(dataInstances.subMap(i, i + miniBatchSize));
+			DataSet newMiniBatch = new DataSet(dataInstances.subList(i, i + miniBatchSize));
 			miniBatches.add(newMiniBatch);
 		}
 		return miniBatches;
 	}
 	
 	public void addInstance(DataInstance instance) 
-	{
-		if (dataInstances.isEmpty())
-		{
-			dataInstances.put(0, instance);
-			return;
-		}
-			
-		dataInstances.put(dataInstances.lastKey() + 1, instance);
+	{		
+		dataInstances.add(instance);
 	}
 	
     public Iterator<DataInstance> getIterator() 
     {
-		return dataInstances.values().iterator();
+		return dataInstances.iterator();
 	}
     
 	public int getNumInstances() 
@@ -176,7 +147,7 @@ public class DataSet {
 	// Create a new empty data set
 	// with default training, validation and test set fractions
 	private DataSet() {
-		dataInstances = new TreeMap<Integer, DataInstance>();
+		dataInstances = new ArrayList<>();
 		trainingSetFraction = 0.8;
 		validationSetFraction = 0.1;
 		testSetFraction = 0.1;
@@ -184,13 +155,13 @@ public class DataSet {
 	
 	private DataSet(double trainingSetFraction)
 	{
-		this.dataInstances = new TreeMap<Integer, DataInstance>();
+		this.dataInstances = new ArrayList<>();
 		this.trainingSetFraction = trainingSetFraction;
 		this.validationSetFraction = 0.5 * (1.0 - trainingSetFraction);
 		this.testSetFraction = validationSetFraction;
 	}
 	
-	private DataSet(SortedMap<Integer, DataInstance> dataSet) 
+	private DataSet(List<DataInstance> dataSet) 
 	{
 		this.dataInstances = dataSet;
 		this.trainingSetFraction = 1.0;

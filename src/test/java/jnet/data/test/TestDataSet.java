@@ -1,4 +1,4 @@
-package jnet.test.data;
+package jnet.data.test;
 
 import junit.framework.TestCase;
 

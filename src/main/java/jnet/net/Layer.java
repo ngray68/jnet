@@ -13,6 +13,7 @@ public class Layer {
 	private Vector biases;
 	private Vector weightedInput;
 	private Vector activation;
+	private ActivationFunction activationFunction;
 
 	private Vector error;
 
@@ -26,7 +27,8 @@ public class Layer {
 	// Construct the layer and initialize the weights/biases to a random
 	// Gaussian distribution
 	// If the layer is an input later, we don't need weights or biases
-	public Layer(int numNeurons, Layer previous) {
+	public Layer(int numNeurons, Layer previous, ActivationFunction activationFunction) {
+		this.activationFunction = activationFunction;
 		this.numNeurons = numNeurons;
 		this.previous = previous;
 		if (previous != null) {
@@ -43,20 +45,20 @@ public class Layer {
 	}
 
 	public void feedForward() {
-		if (previous == null)
+		if (previous == null || activationFunction == null)
 			return;
 
 		setWeightedInput(previous.getActivation());
-		setActivation(sigmoid(getWeightedInput()));
+		setActivation(activationFunction.evaluate(getWeightedInput()));
 	}
 
 	public void backPropagate(DataInstance dataInstance, CostFunction costFunction) {
-		if (previous == null)
+		if (previous == null || activationFunction == null)
 			return;
 		
 		// output layer
 		setError(Vector.schurProduct(costFunction.costPrime(getActivation(), dataInstance.getExpectedOutputs()),
-				sigmoidPrime(getWeightedInput())));
+				activationFunction.firstDerivative(getWeightedInput())));
 	}
 
 	private Vector getWeightedInput() {
@@ -65,11 +67,11 @@ public class Layer {
 	}
 
 	public void backPropagate(Layer next) {
-		if (previous == null)
+		if (previous == null || activationFunction == null)
 			return;
 		
 		setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(next.getWeights()), next.getError()),
-				sigmoidPrime(getWeightedInput())));
+				activationFunction.firstDerivative(getWeightedInput())));
 	}
 
 	public Matrix getWeights() {
@@ -109,30 +111,6 @@ public class Layer {
 
 	private void setWeightedInput(Vector prevActivation) {
 		weightedInput = Vector.add(Matrix.multiply(weights, prevActivation), biases);
-	}
-
-	private Vector sigmoid(Vector v) {
-		ArrayList<Double> result = new ArrayList<Double>();
-		for (int i = 0; i < v.getSize(); ++i) {
-			result.add(i, sigmoid(v.getElement(i)));
-		}
-		return new Vector(result);
-	}
-
-	private Vector sigmoidPrime(Vector v) {
-		ArrayList<Double> result = new ArrayList<Double>();
-		for (int i = 0; i < v.getSize(); ++i) {
-			result.add(i, sigmoidPrime(v.getElement(i)));
-		}
-		return new Vector(result);
-	}
-
-	private double sigmoid(double z) {
-		return 1 / (1 + Math.exp(-z));
-	}
-
-	private double sigmoidPrime(double z) {
-		return sigmoid(z) * (1 - sigmoid(z));
 	}
 
 	public Layer getPrevious() {

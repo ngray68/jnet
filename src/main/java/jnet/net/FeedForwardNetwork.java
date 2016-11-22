@@ -22,9 +22,9 @@ public class FeedForwardNetwork implements Network {
 		assert (layerSizes.length > 0);
 		logger.log(Level.INFO, "Creating neural network\n");
 		layers = new ArrayList<Layer>();
-		layers.add(0, new Layer(layerSizes[0], null));
+		layers.add(0, new Layer(layerSizes[0], null, null));
 		for (int i = 1; i < layerSizes.length; ++i) {
-			layers.add(i, new Layer(layerSizes[i], layers.get(i-1)));
+			layers.add(i, new Layer(layerSizes[i], layers.get(i-1), new SigmoidFunction()));
 		}
 	}
 	

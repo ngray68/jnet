@@ -1,12 +1,10 @@
-package jnet.test.data;
+package jnet.data.test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import jnet.data.ConfusionMatrix;
