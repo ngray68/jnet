@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.data.DataInstance;
 import jnet.net.Layer;
+import jnet.net.Matrix;
 import jnet.net.MeanSquaredError;
 import jnet.net.SigmoidFunction;
 import jnet.net.Vector;
@@ -41,7 +42,8 @@ public class TestLayer extends TestCase {
 		
 		assert (outputLayer.getError() == null);
 		outputLayer.feedForward();
-		outputLayer.backPropagate(instance, costFunction);
+		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
 		assert (outputLayer.getError() != null);
 		
 	}
@@ -60,8 +62,10 @@ public class TestLayer extends TestCase {
 		assert (hiddenLayer.getError() == null);
 		hiddenLayer.feedForward();	
 		outputLayer.feedForward();
-		outputLayer.backPropagate(instance, costFunction);
-		hiddenLayer.backPropagate(outputLayer);
+		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
+		hiddenLayer.setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(outputLayer.getWeights()), outputLayer.getError()),
+				hiddenLayer.getActivationFunction().firstDerivative(hiddenLayer.getWeightedInput())));
 		assert (hiddenLayer.getError() != null);
 		
 	}
@@ -78,7 +82,8 @@ public class TestLayer extends TestCase {
 		
 		assert (outputLayer.getError() == null);
 		outputLayer.feedForward();
-		outputLayer.backPropagate(instance, costFunction);
+		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
 		assert (outputLayer.getBiasGradient().equals(outputLayer.getError()));
 	}
 
@@ -93,7 +98,8 @@ public class TestLayer extends TestCase {
 		
 		assert (outputLayer.getError() == null);
 		outputLayer.feedForward();
-		outputLayer.backPropagate(instance, costFunction);
+		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
 		assert (outputLayer.getWeightGradient().equals(Vector.dyadicProduct(outputLayer.getError(), previous.getActivation())));
 	}
 }

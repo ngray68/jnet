@@ -52,29 +52,9 @@ public class Layer {
 		setActivation(activationFunction.evaluate(getWeightedInput()));
 	}
 
-	public void backPropagate(DataInstance dataInstance, CostFunction costFunction) 
+	public Vector getWeightedInput() 
 	{
-		if (previous == null || activationFunction == null)
-			return;
-		
-		// output layer
-		setError(Vector.schurProduct(costFunction.costPrime(getActivation(), dataInstance.getExpectedOutputs()),
-				activationFunction.firstDerivative(getWeightedInput())));
-	}
-
-	private Vector getWeightedInput() 
-	{
-		// TODO Auto-generated method stub
 		return weightedInput;
-	}
-
-	public void backPropagate(Layer next) 
-	{
-		if (previous == null || activationFunction == null)
-			return;
-		
-		setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(next.getWeights()), next.getError()),
-				activationFunction.firstDerivative(getWeightedInput())));
 	}
 
 	public Matrix getWeights() 
@@ -107,45 +87,43 @@ public class Layer {
 		return Vector.dyadicProduct(error, previous.getActivation());
 	}
 
-	public Vector getActivation() {
+	public Vector getActivation() 
+	{
 		return activation;
 	}
 
-	public void setActivation(Vector activation) {
+	public void setActivation(Vector activation) 
+	{
 		this.activation = activation;
 	}
 
-	private void setWeightedInput(Vector prevActivation) {
+	private void setWeightedInput(Vector prevActivation) 
+	{
 		weightedInput = Vector.add(Matrix.multiply(weights, prevActivation), biases);
 	}
 
-	public Layer getPrevious() {
+	public Layer getPrevious() 
+	{
 		return previous;
 	}
 
-	public void setPrevious(Layer previous) {
+	public void setPrevious(Layer previous) 
+	{
 		this.previous = previous;
 	}
 
-	public Vector getError() {
+	public Vector getError()
+	{
 		return error;
 	}
 
-	private void setError(Vector error) {
+	public void setError(Vector error) 
+	{
 		this.error = error;
 	}
-	
-/* Moved to stochastic gradient descent class
-	public void adjustWeights(double learningRate, Matrix meanWeightGradient) {
-		if (weights != null) {
-		   weights = Matrix.add(weights, Matrix.multiply(-learningRate, meanWeightGradient));
-		}
-	}
 
-	public void adjustBiases(double learningRate, Vector meanBiasGradient) {
-		if (biases != null) {
-			this.biases = Vector.add(this.biases, Vector.multiply(-learningRate, meanBiasGradient));
-		}
+	public ActivationFunction getActivationFunction() 
+	{
+		return activationFunction;
 	}
-	*/
 }

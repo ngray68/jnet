@@ -87,11 +87,18 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 	private void backPropagate(Network network, DataInstance instance, CostFunction costFunction)
 	{
 		Layer outputLayer = network.getOutputLayer();
-		outputLayer.backPropagate(instance, costFunction);
+		//outputLayer.backPropagate(instance, costFunction);
+		
+		// output layer error
+		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
+		
 		Layer next = outputLayer;
 		Layer prev = outputLayer.getPrevious();
-		while (prev != null) {
-			prev.backPropagate(next);
+		while (prev != null && prev.getActivationFunction() != null) {
+			prev.setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(next.getWeights()), next.getError()),
+					prev.getActivationFunction().firstDerivative(prev.getWeightedInput())));
+			//prev.backPropagate(next);
 			next = prev;
 			prev = next.getPrevious();
 		}
