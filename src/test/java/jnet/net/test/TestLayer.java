@@ -79,23 +79,21 @@ public class TestLayer extends TestCase {
 		assert (outputLayer.getError() == null);
 		outputLayer.feedForward();
 		outputLayer.backPropagate(instance, costFunction);
-		assert (outputLayer.getBiasGradient() == outputLayer.getError());
+		assert (outputLayer.getBiasGradient().equals(outputLayer.getError()));
 	}
 
 	public void testGetWeightGradient() {
-		fail("Not yet implemented");
+		CostFunction costFunction = new MeanSquaredError();
+		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
+		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
+		DataInstance instance = new DataInstance(inputs, expectedOutput);
+		Layer previous = new Layer(3, null,null);
+		previous.setActivation(inputs);
+		Layer outputLayer = new Layer(3, previous, new SigmoidFunction());
+		
+		assert (outputLayer.getError() == null);
+		outputLayer.feedForward();
+		outputLayer.backPropagate(instance, costFunction);
+		assert (outputLayer.getWeightGradient().equals(Vector.dyadicProduct(outputLayer.getError(), previous.getActivation())));
 	}
-
-	public void testGetError() {
-		fail("Not yet implemented");
-	}
-
-	public void testAdjustWeights() {
-		fail("Not yet implemented");
-	}
-
-	public void testAdjustBiases() {
-		fail("Not yet implemented");
-	}
-
 }

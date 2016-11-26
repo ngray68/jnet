@@ -73,19 +73,21 @@ public class Matrix {
 		return values[row][col];
 		
 	}
-	
-	public boolean equals(Matrix right) {
+
+	@Override
+	public boolean equals(Object right) {
+		Matrix rhs = (Matrix)right;
 		if (this == right)
 			return true;
 		
-		if (this.getNumRows() != right.getNumRows() ||
-			this.getNumCols() != right.getNumCols()) {
+		if (this.getNumRows() != rhs.getNumRows() ||
+			this.getNumCols() != rhs.getNumCols()) {
 			return false;
 		}
 		
 		for (int i = 0; i < this.getNumRows(); ++i) {
 			for (int j = 0; j < this.getNumCols(); ++j) {
-				if (this.getElement(i, j) != right.getElement(i, j))
+				if (this.getElement(i, j) != rhs.getElement(i, j))
 					return false;
 			}
 		}

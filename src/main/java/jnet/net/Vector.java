@@ -60,15 +60,17 @@ public class Vector {
 		return elements[i];
 	}
 	
-	public boolean equals(Vector right) {
+	@Override
+	public boolean equals(Object right) {
 		if (this == right)
 			return true;
 		
-		if (this.getSize() != right.getSize())
+		Vector rhs = (Vector)right;
+		if (this.getSize() != rhs.getSize())
 			return false;
 		
 		for (int i = 0; i < this.getSize(); ++i) {
-			if (this.getElement(i) != right.getElement(i))
+			if (this.getElement(i) != rhs.getElement(i))
 				return false;
 		}
 		return true;

@@ -128,8 +128,8 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 		// adjust weights and biases
 		Layer layer = network.getOutputLayer();
 		while (layer != null && layer.getPrevious() != null) {
-			layer.adjustWeights(learningRate, getMeanWeightGradient(layer));
-			layer.adjustBiases(learningRate, getMeanBiasGradient(layer));
+			adjustWeights(layer, learningRate, getMeanWeightGradient(layer));
+			adjustBiases(layer, learningRate, getMeanBiasGradient(layer));
 			layer = layer.getPrevious();
 		}
 	}
@@ -164,5 +164,17 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 			}
 		}
 		return Vector.multiply(1.0/biasGradients.get(layer).size(), sum);
+	}
+	
+	private void adjustWeights(Layer layer, double learningRate, Matrix meanWeightGradient) {
+		if (layer.getWeights() != null) {
+		   layer.setWeights(Matrix.add(layer.getWeights(), Matrix.multiply(-learningRate, meanWeightGradient)));
+		}
+	}
+
+	private void adjustBiases(Layer layer, double learningRate, Vector meanBiasGradient) {
+		if (layer.getBiases() != null) {
+			layer.setBiases(Vector.add(layer.getBiases(), Vector.multiply(-learningRate, meanBiasGradient)));
+		}
 	}
 }

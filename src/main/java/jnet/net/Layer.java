@@ -52,7 +52,8 @@ public class Layer {
 		setActivation(activationFunction.evaluate(getWeightedInput()));
 	}
 
-	public void backPropagate(DataInstance dataInstance, CostFunction costFunction) {
+	public void backPropagate(DataInstance dataInstance, CostFunction costFunction) 
+	{
 		if (previous == null || activationFunction == null)
 			return;
 		
@@ -61,12 +62,14 @@ public class Layer {
 				activationFunction.firstDerivative(getWeightedInput())));
 	}
 
-	private Vector getWeightedInput() {
+	private Vector getWeightedInput() 
+	{
 		// TODO Auto-generated method stub
 		return weightedInput;
 	}
 
-	public void backPropagate(Layer next) {
+	public void backPropagate(Layer next) 
+	{
 		if (previous == null || activationFunction == null)
 			return;
 		
@@ -74,33 +77,36 @@ public class Layer {
 				activationFunction.firstDerivative(getWeightedInput())));
 	}
 
-	public Matrix getWeights() {
-		// TODO Auto-generated method stub
+	public Matrix getWeights() 
+	{	
 		return weights;
 	}
+	
+	public void setWeights(Matrix weights)
+	{
+		this.weights = weights;
+	}
+	
+	public Vector getBiases()
+	{
+		return biases;
+	}
+	
+	public void setBiases(Vector biases)
+	{
+		this.biases = biases;
+	}
 
-	public Vector getBiasGradient() {
+	public Vector getBiasGradient() 
+	{
 		return error;
 	}
 
-	public Matrix getWeightGradient() {
+	public Matrix getWeightGradient() 
+	{
 		return Vector.dyadicProduct(error, previous.getActivation());
 	}
-/*
-	public void addBiasGradient(Vector biasGradient) {
-		if (biasGradients == null)
-			biasGradients = new ArrayList<Vector>();
 
-		biasGradients.add(biasGradient);
-	}
-
-	public void addWeightGradient(Matrix weightGradient) {
-		if (weightGradients == null)
-			weightGradients = new ArrayList<Matrix>();
-		
-		weightGradients.add(weightGradient);
-	}
-*/
 	public Vector getActivation() {
 		return activation;
 	}
@@ -128,45 +134,18 @@ public class Layer {
 	private void setError(Vector error) {
 		this.error = error;
 	}
-
+	
+/* Moved to stochastic gradient descent class
 	public void adjustWeights(double learningRate, Matrix meanWeightGradient) {
 		if (weights != null) {
-		   //assert (weightGradients != null && weightGradients.size() >  0);
-		   //weights = Matrix.add(weights, Matrix.multiply(-learningRate/(weightGradients.size()), getSumOfWeightGradients()));
 		   weights = Matrix.add(weights, Matrix.multiply(-learningRate, meanWeightGradient));
 		}
 	}
-/*
-	private Matrix getSumOfWeightGradients() {
-		Matrix sum = new Matrix(weights.getNumRows(), weights.getNumCols());
-		for (Matrix weightGradient : weightGradients) {
-			sum = Matrix.add(sum, weightGradient);
-		}
-		return sum;
-	}
-*/
+
 	public void adjustBiases(double learningRate, Vector meanBiasGradient) {
 		if (biases != null) {
-			//assert (biasGradients != null && biasGradients.size() > 0);
-			//this.biases = Vector.add(this.biases, Vector.multiply(-learningRate/(biasGradients.size()), getSumOfBiasGradients()));
 			this.biases = Vector.add(this.biases, Vector.multiply(-learningRate, meanBiasGradient));
 		}
-	}
-/*
-	private Vector getSumOfBiasGradients() {
-		Vector sum = new Vector(biases.getSize());
-		for (Vector biasGradient : biasGradients) {
-			sum = Vector.add(sum, biasGradient);
-		}
-		return sum;
-	}
-
-	public void clearWeightGradients() {
-		this.weightGradients = null;
-	}
-
-	public void clearBiasGradients() {
-		this.biasGradients = null;
 	}
 	*/
 }
