@@ -2,7 +2,6 @@ package jnet.algorithm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -53,22 +52,21 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 			logger.log(Level.INFO, String.format("%s %d", "Starting epoch ", epoch));
 			trainingSet.shuffle();			
 			List<DataSet> batches = trainingSet.getMiniBatches(batchSize);
-		
-			int count = 1;
-			for (DataSet batch : batches) {		
-				logger.log(Level.FINE, String.format("Training minibatch %d", count));
-				Iterator<DataInstance> instanceIter = batch.getIterator();
-				while (instanceIter.hasNext()) {
-					DataInstance instance = instanceIter.next();
-					feedForward(network, instance);
-					backPropagate(network, instance, costFunction);
-					calculateGradient(network);
-				}
-				++count;
 			
-				adjustWeightsAndBiases(network);
-				clearGradients();
-			}
+			// replaced the earlier for loop and moved the gradient calculation to a lambda
+			// referencing a method of the class - this will ease separating the back-prop
+			// aspect of the algorithm from the stochastic gradient descent
+			batches.forEach(
+					batch -> { 
+						logger.log(Level.FINE, String.format("Training minibatch..."));
+							batch.getDataInstances().forEach(
+								(instance) -> { calculateAndCaptureGradient(network, instance, costFunction); }
+								);
+						
+							adjustWeightsAndBiases(network);
+							clearGradients();
+						}
+					);
 			
 			// TODO - early stopping on successful validation
 			logger.log(Level.INFO, "Evaluating current epoch");
@@ -184,4 +182,12 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 			layer.setBiases(Vector.add(layer.getBiases(), Vector.multiply(-learningRate, meanBiasGradient)));
 		}
 	}
+	
+	public void calculateAndCaptureGradient(Network network, DataInstance instance, CostFunction costFunction)
+	{
+		feedForward(network, instance);
+		backPropagate(network, instance, costFunction);
+		calculateGradient(network);
+	}
+	
 }

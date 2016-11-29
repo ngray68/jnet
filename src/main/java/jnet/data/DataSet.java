@@ -132,6 +132,11 @@ public class DataSet {
 		return dataInstances.iterator();
 	}
     
+    public List<DataInstance> getDataInstances()
+    {
+    	return dataInstances;
+    }
+    
 	public int getNumInstances() 
 	{
 		return dataInstances.size();

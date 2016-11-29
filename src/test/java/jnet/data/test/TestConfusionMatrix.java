@@ -10,7 +10,7 @@ import org.junit.Test;
 import jnet.data.ConfusionMatrix;
 import jnet.net.Vector;
 
-public class ConfusionMatrixTest {
+public class TestConfusionMatrix {
 	
 	ConfusionMatrix confusionMatrix;
 

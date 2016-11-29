@@ -1,11 +1,9 @@
 package jnet.net;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-import jnet.data.DataInstance;
-
-public class Layer {
+public class Layer 
+{
 
 	private int numNeurons;
 	private Layer previous;
@@ -27,7 +25,8 @@ public class Layer {
 	// Construct the layer and initialize the weights/biases to a random
 	// Gaussian distribution
 	// If the layer is an input later, we don't need weights or biases
-	public Layer(int numNeurons, Layer previous, ActivationFunction activationFunction) {
+	public Layer(int numNeurons, Layer previous, ActivationFunction activationFunction) 
+	{
 		this.activationFunction = activationFunction;
 		this.numNeurons = numNeurons;
 		this.previous = previous;
@@ -39,22 +38,20 @@ public class Layer {
 			biases = null;
 		}
 	}
-
-	public int getNumNeurons() {
+	
+	public int getNumNeurons() 
+	{
 		return numNeurons;
-	}
-
-	public void feedForward() {
-		if (previous == null || activationFunction == null)
-			return;
-
-		setWeightedInput(previous.getActivation());
-		setActivation(activationFunction.evaluate(getWeightedInput()));
 	}
 
 	public Vector getWeightedInput() 
 	{
 		return weightedInput;
+	}
+	
+	public void setWeightedInput(Vector input) 
+	{
+		weightedInput = Vector.add(Matrix.multiply(weights, input), biases);
 	}
 
 	public Matrix getWeights() 
@@ -97,11 +94,6 @@ public class Layer {
 		this.activation = activation;
 	}
 
-	private void setWeightedInput(Vector prevActivation) 
-	{
-		weightedInput = Vector.add(Matrix.multiply(weights, prevActivation), biases);
-	}
-
 	public Layer getPrevious() 
 	{
 		return previous;
@@ -125,5 +117,10 @@ public class Layer {
 	public ActivationFunction getActivationFunction() 
 	{
 		return activationFunction;
+	}
+	
+	public void setActivationFunction(ActivationFunction activationFunction) 
+	{
+		this.activationFunction = activationFunction;
 	}
 }

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;
-import jnet.data.Statistics;
+import jnet.data.Statistics; 
 
 
 public class FeedForwardNetwork implements Network {
@@ -75,9 +75,16 @@ public class FeedForwardNetwork implements Network {
 	@Override
 	public Vector evaluate(DataInstance instance) 
 	{
-		layers.get(0).setActivation(instance.getInputs());
+		//layers.get(0).setActivation(instance.getInputs());
 		for (Layer layer : layers) {
-			layer.feedForward();
+			//layer.feedForward();
+			if (layer.getPrevious() == null || layer.getActivationFunction() == null) {
+				layer.setActivation(instance.getInputs());
+			}
+			else {
+				layer.setWeightedInput(layer.getPrevious().getActivation());
+				layer.setActivation(layer.getActivationFunction().evaluate(layer.getWeightedInput()));
+			}
 		}	
 		return getOutput();
 	}
