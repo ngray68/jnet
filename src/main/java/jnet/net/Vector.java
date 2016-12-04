@@ -91,6 +91,18 @@ public class Vector {
 		return str;
 	}
 	
+	public Vector add(Vector right) {
+		assert (this.getSize() == right.getSize());
+		int i = 0;
+		
+		int size = this.getSize();
+		while (i < size) {
+			elements[i] = this.getElement(i) + right.getElement(i);
+			++i;
+		}
+		return this;
+	}
+	
 	public static Vector add(Vector left, Vector right) {
 		assert (left.getSize() == right.getSize());
 		int i = 0;
@@ -144,11 +156,10 @@ public class Vector {
 	}
 	
 	public static Matrix dyadicProduct(Vector left, Vector right) {
-		List<List<Double>> dyad = new ArrayList<List<Double>>(left.getSize());
+		Double[][] dyad = new Double[left.getSize()][right.getSize()];
 		for (int i = 0; i < left.getSize(); ++i) {
-			dyad.add(i, new ArrayList<Double>(right.getSize()));
 			for (int j = 0; j < right.getSize(); ++j) {
-				dyad.get(i).add(j, left.getElement(i) * right.getElement(j));
+				dyad[i][j] = left.getElement(i) * right.getElement(j);
 			}
 		}
 		return new Matrix(dyad);
