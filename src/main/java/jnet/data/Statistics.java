@@ -70,12 +70,7 @@ public class Statistics {
 	 * @param detailed
 	 */
 	public void print(boolean detailed)
-	{
-		System.out.println(String.format("Mean error: %f", getMeanError()));
-		System.out.println(String.format("Accuracy: %f", getAccuracy()));
-		System.out.println(String.format("Precision: %s", getPrecision().toString()));
-		System.out.println(String.format("Recall: %s\n", getRecall().toString()));
-	
+	{	
 		if (detailed) {		
 			outputs.forEach(
 				(instance, output) -> {
@@ -86,6 +81,12 @@ public class Statistics {
 					}
 				);
 		}
+		
+		System.out.println(String.format("Mean error: %f", getMeanError()));
+		System.out.println(String.format("Accuracy: %f", getAccuracy()));
+		System.out.println(String.format("Precision: %s", getPrecision().toString()));
+		System.out.println(String.format("Recall: %s\n", getRecall().toString()));
+	
 		
 	}
  

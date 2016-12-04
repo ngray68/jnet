@@ -49,8 +49,11 @@ public class Layer
 		return weightedInput;
 	}
 	
-	public void setWeightedInput(Vector input) 
+	public void setWeightedInput(Vector input) throws NetworkException 
 	{
+		if (weights.getNumCols() != input.getSize()) {
+			throw new NetworkException(String.format("Layer expects %d inputs, got %d", weights.getNumCols(), input.getSize()));
+		}
 		weightedInput = Vector.add(Matrix.multiply(weights, input), biases);
 	}
 
@@ -59,8 +62,12 @@ public class Layer
 		return weights;
 	}
 	
-	public void setWeights(Matrix weights)
+	public void setWeights(Matrix weights) throws NetworkException
 	{
+		if (weights.getNumRows() != getNumNeurons()) {
+			throw new NetworkException(String.format("Attempt to set Layer weight matrix with %d rows inconsistent with number of neurons %d in the layer",
+					weights.getNumRows(), getNumNeurons()));
+		}
 		this.weights = weights;
 	}
 	
@@ -69,8 +76,12 @@ public class Layer
 		return biases;
 	}
 	
-	public void setBiases(Vector biases)
+	public void setBiases(Vector biases) throws NetworkException
 	{
+		if (biases.getSize() != getNumNeurons()) {
+			throw new NetworkException(String.format("Attempt to set Layer bias vector of size %d inconsistent with number of neurons %d in the layer",
+					weights.getNumRows(), getNumNeurons()));
+		}
 		this.biases = biases;
 	}
 

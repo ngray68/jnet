@@ -3,6 +3,7 @@ package jnet.net.test;
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.net.MeanSquaredError;
+import jnet.net.NetworkException;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;
@@ -27,7 +28,12 @@ public class TestFeedForwardNetwork extends TestCase {
 		}
 		
 		StochasticGradientDescent sgd = new StochasticGradientDescent(1,5, 0.005, 0);
-		network.train(dataSet, sgd, costFunction);
+		try {
+			network.train(dataSet, sgd, costFunction);
+		} catch (NetworkException e) {
+			assertTrue("Test failed", false);
+			e.printStackTrace();
+		}
 	}
 	
 	public void testValidateOrTest() {
@@ -41,7 +47,12 @@ public class TestFeedForwardNetwork extends TestCase {
 		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
 		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);
-		network.evaluate(instance);
+		try {
+			network.evaluate(instance);
+		} catch (NetworkException e) {
+			assertTrue("Test failed", false);
+			e.printStackTrace();
+		}
 	
 	}
 

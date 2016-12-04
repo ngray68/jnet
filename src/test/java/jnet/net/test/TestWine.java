@@ -3,6 +3,7 @@ package jnet.net.test;
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.net.MeanSquaredError;
+import jnet.net.NetworkException;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataSet;
@@ -32,8 +33,15 @@ public class TestWine extends TestCase {
 		double learningRate = 0.25;
 		int batchSize = 5;
 		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, 0);
-		network.train(dataSet, sgd, costFunction);
-		//network.stochasticGradientDescent(dataSet, costFunction, numEpochs, batchSize, learningRate);
+		try {
+			network.train(dataSet, sgd, costFunction);
+		} catch (NetworkException e) {
+			assertTrue("Test failed", false);
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			assertTrue("Test failed", false);
+			e.printStackTrace();
+		}
 	}
 
 }

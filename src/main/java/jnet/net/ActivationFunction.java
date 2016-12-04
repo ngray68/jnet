@@ -2,6 +2,7 @@ package jnet.net;
 
 /**
  * Network activation functions implement this interface
+ * Note that despite the name, this is not a functional interface
  * @author nigelgray
  *
  */

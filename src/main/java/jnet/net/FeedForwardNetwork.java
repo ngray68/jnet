@@ -29,15 +29,42 @@ public class FeedForwardNetwork implements Network {
 	}
 	
 	@Override
-	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction) 
+	public void train(DataSet trainingSet, DataSet testSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException
+	{
+		logger.log(Level.INFO, "Starting training...");
+		if (trainingSet == null || testSet == null)
+			throw new NetworkException("DataSet cannot be null");
+		if (algorithm == null)
+			throw new NetworkException("LearningAlgorithm cannot be null");
+		if (costFunction == null)
+			throw new NetworkException("CostFunction cannot be null");
+		
+		if (trainingSet.isEmpty() || testSet.isEmpty()) {
+			logger.log(Level.WARNING, "Network.train() called with empty dataset - doing nothing");
+			return;
+		}
+		
+		// make sure the data set is shuffled
+		trainingSet.shuffle();
+		
+		// split the data set into training, validation sets
+		algorithm.execute(this, trainingSet.getTrainingSubset(), trainingSet.getValidationSubset(), costFunction);
+
+		Statistics testStats = validateOrTest(testSet, costFunction);
+		testStats.print(true);
+		
+	}
+	
+	@Override
+	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException 
 	{
 		logger.log(Level.INFO, "Starting training...");
 		if (dataSet == null)
-			throw new NullPointerException("DataSet cannot be null");
+			throw new NetworkException("DataSet cannot be null");
 		if (algorithm == null)
-			throw new NullPointerException("LearningAlgorithm cannot be null");
+			throw new NetworkException("LearningAlgorithm cannot be null");
 		if (costFunction == null)
-			throw new NullPointerException("CostFunction cannot be null");
+			throw new NetworkException("CostFunction cannot be null");
 		
 		if (dataSet.isEmpty()) {
 			logger.log(Level.WARNING, "Network.train() called with empty dataset - doing nothing");
@@ -59,25 +86,28 @@ public class FeedForwardNetwork implements Network {
 	}
 
 	@Override
-	public Statistics validateOrTest(DataSet dataSet, CostFunction costFunction) 
+	public Statistics validateOrTest(DataSet dataSet, CostFunction costFunction) throws NetworkException 
 	{
 		assert (dataSet != null);
 		Statistics stats = new Statistics();
-		Iterator<DataInstance> instanceIter = dataSet.getIterator();
-		while (instanceIter.hasNext()) {
-			
+		
+		for(Iterator<DataInstance> instanceIter = dataSet.getIterator(); instanceIter.hasNext(); ) {
 			DataInstance instance = instanceIter.next();
+			if (instance == null) {
+				throw new NullPointerException("Cannot evualate null data instance");
+			}
 			stats.addStatistics(instance, evaluate(instance), costFunction);
 		}
 		return stats;
 	}
 	
 	@Override
-	public Vector evaluate(DataInstance instance) 
+	public Vector evaluate(DataInstance instance) throws NetworkException 
 	{
-		//layers.get(0).setActivation(instance.getInputs());
 		for (Layer layer : layers) {
-			//layer.feedForward();
+			if (layer == null) {
+				throw new NullPointerException("Null pointer to network Layer detected - stopping evaluation");
+			}
 			if (layer.getPrevious() == null || layer.getActivationFunction() == null) {
 				layer.setActivation(instance.getInputs());
 			}
@@ -108,15 +138,7 @@ public class FeedForwardNetwork implements Network {
 		return getOutputLayer().getActivation();
 	}
 	
-	
-	// TODO Check into Github DONE
-	// TODO migrate to Maven build  DONE
-	// TODO Refactor Network to separate Learning algorithm IN PROGRESS
-	// TODO Review interfaces, implementation IN PROGRESS
-	// TODO Formalize statistics gathering IN PROGRESS
-	// TODO Formalize data set reading
 	// TODO Add defensive checks to all classes and test these cases
-	// TODO add logging to Network and Layer classes IN PROGRESS
 	// TODO complete unit tests IN PROGRESS
 	
 }

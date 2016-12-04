@@ -21,17 +21,17 @@ public class Matrix {
 		}	
 	}
 	
+	/**
+	 * Initialize the matrix with the array values
+	 * The matrix owns the array after initialization
+	 * @param values
+	 */
 	public Matrix(Double[][] values) {
 		assert (values.length > 0);
 		assert (values[0].length > 0);
 		this.rows = values.length;
 		this.cols = values[0].length;
-		this.values = new Double[rows][cols];
-		for (int i = 0; i < rows; ++i) {
-			for (int j = 0; j < cols; ++j) {
-				this.values[i][j] = values[i][j];
-			}
-		}	
+		this.values = values;
 	}
 	
 	public Matrix(int rows, int cols) {
@@ -54,8 +54,7 @@ public class Matrix {
 			for (int j = 0; j < cols; ++j) {
 				this.values[i][j] = random.nextGaussian();
 			}
-		}	
-		
+		}		
 	}
 	
 	public int getNumRows() {
@@ -92,6 +91,25 @@ public class Matrix {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Add the supplied matrix to this matrix.
+	 * This matrix contains the sum on completion
+	 * @param right
+	 * @return
+	 */
+	public Matrix add( Matrix right) {
+		assert (this.getNumRows() == right.getNumRows());
+		assert (this.getNumCols() == right.getNumCols());
+		
+		for (int i = 0; i < this.getNumRows(); ++i) {
+			for (int j = 0; j < this.getNumCols(); ++j) {
+				values[i][j] = this.getElement(i, j) + right.getElement(i,j);
+			}
+		}
+		
+		return this;
 	}
 
 	public static Matrix add(Matrix left, Matrix right) {

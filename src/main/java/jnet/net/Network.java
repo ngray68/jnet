@@ -1,7 +1,5 @@
 package jnet.net;
 
-import java.util.List;
-
 import jnet.algorithm.LearningAlgorithm;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;
@@ -15,14 +13,26 @@ import jnet.data.Statistics;
 public interface Network {
 
 	/**
+	 * Call this method to train the neural network with the given trainingSet, where the
+	 * testSet is separately supplied
+	 * @param trainingSet
+	 * @param testSet
+	 * @param algorithm
+	 * @param costFunction
+	 * @throws NetworkException
+	 */
+	void train(DataSet trainingSet, DataSet testSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException;
+	
+	/**
 	 * Call this method to train the neural network with the given
 	 * data set, learning algorithm, and cost function
 	 * Hyper-parameters are provided by the learning algorithm
 	 * @param trainingSet
 	 * @param algorithm
 	 * @param costFunction
+	 * @throws NetworkException 
 	 */
-	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction);
+	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException;
 	
 	/**
 	 * Call this method to validate or test a trained or partially trained 
@@ -30,16 +40,18 @@ public interface Network {
 	 * @param dataSet
 	 * @param costFunction
 	 * @return statistics measuring the validation results
+	 * @throws NetworkException 
 	 */
-	public Statistics validateOrTest(DataSet dataSet, CostFunction costFunction);
+	public Statistics validateOrTest(DataSet dataSet, CostFunction costFunction) throws NetworkException;
 	
 	/**
 	 * Call this method to apply the trained or partially trained neural network
 	 * to the chosen data instance
 	 * @param instance
 	 * @return the output of the neural network for the given data instance
+	 * @throws NetworkException 
 	 */
-	public Vector evaluate(DataInstance instance);
+	public Vector evaluate(DataInstance instance) throws NetworkException;
 	
 	/**
 	 * Call this method to return a reference to the network's input layer
@@ -52,4 +64,6 @@ public interface Network {
 	 * @return Layer
 	 */
 	public Layer getOutputLayer();
+
+	
 }

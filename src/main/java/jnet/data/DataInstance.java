@@ -30,7 +30,11 @@ public class DataInstance {
 	public void normalize(Double[] minValues, Double[] maxValues) {
 		Double[] normalizedInputs = new Double[inputs.getSize()];
 		for (int i = 0; i < inputs.getSize(); ++i) {
-			normalizedInputs[i] = (inputs.getElement(i) - minValues[i])/(maxValues[i] - minValues[i]);
+			if (maxValues[i] - minValues[i] != 0) {
+				normalizedInputs[i] = (inputs.getElement(i) - minValues[i])/(maxValues[i] - minValues[i]);
+			} else {
+				normalizedInputs[i] = 0.0;
+			}
 		}
 		inputs = new Vector(normalizedInputs);
 	}
