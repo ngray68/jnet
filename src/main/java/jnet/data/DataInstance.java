@@ -27,8 +27,8 @@ public class DataInstance {
 		return expectedOutputs;
 	}
 
-	public void normalize(Double[] minValues, Double[] maxValues) {
-		Double[] normalizedInputs = new Double[inputs.getSize()];
+	public void normalize(double[] minValues, double[] maxValues) {
+		double[] normalizedInputs = new double[inputs.getSize()];
 		for (int i = 0; i < inputs.getSize(); ++i) {
 			if (maxValues[i] - minValues[i] != 0) {
 				normalizedInputs[i] = (inputs.getElement(i) - minValues[i])/(maxValues[i] - minValues[i]);

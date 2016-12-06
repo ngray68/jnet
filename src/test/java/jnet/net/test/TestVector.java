@@ -82,25 +82,25 @@ public class TestVector extends TestCase {
 
 	public void testDotProduct() {
 		//fail("Not yet implemented");		
-		Vector left = new Vector(new Double[]{1.0, 2.0, 3.0});
-		Vector right = new Vector(new Double[]{2.0,3.0,4.0});
+		Vector left = new Vector(new double[]{1.0, 2.0, 3.0});
+		Vector right = new Vector(new double[]{2.0,3.0,4.0});
 		double expectedResult = 20.0;
 		assert (Vector.dotProduct(left, right) == expectedResult);
 	}
 
 	public void testSchurProduct() {
 		//fail("Not yet implemented");
-		Vector left = new Vector(new Double[]{1.0, 2.0, 3.0});
-		Vector right = new Vector(new Double[]{2.0,3.0,4.0});
-		Vector expectedResult = new Vector(new Double[]{2.0, 6.0, 12.0});
+		Vector left = new Vector(new double[]{1.0, 2.0, 3.0});
+		Vector right = new Vector(new double[]{2.0,3.0,4.0});
+		Vector expectedResult = new Vector(new double[]{2.0, 6.0, 12.0});
 		assert (Vector.schurProduct(left, right).equals(expectedResult));
 	}
 
 	public void testDyadicProduct() {
 		//fail("Not yet implemented");
-		Vector left = new Vector(new Double[]{1.0, 2.0, 3.0});
-		Vector right = new Vector(new Double[]{2.0,3.0,4.0, 5.0});
-		Double[][] prod = new Double[][] {
+		Vector left = new Vector(new double[]{1.0, 2.0, 3.0});
+		Vector right = new Vector(new double[]{2.0,3.0,4.0, 5.0});
+		double[][] prod = new double[][] {
 			{2.0, 3.0, 4.0, 5.0 },
 			{4.0, 6.0, 8.0, 10.0},
 			{6.0, 9.0, 12.0, 15.0}

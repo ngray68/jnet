@@ -78,7 +78,7 @@ public class ConfusionMatrix {
 	{
 		// precision is true positives/all observed positives for each class
 		// ie. matrix element ii/sum over j of element ij
-		Double[] precision = new Double[matrix.getNumRows()];
+		double[] precision = new double[matrix.getNumRows()];
 		for (int i = 0; i < matrix.getNumRows(); ++i) {
 			Double tp = matrix.getElement(i, i);
 			Double p = 0.0;
@@ -104,7 +104,7 @@ public class ConfusionMatrix {
 	{
 		// recall is true positives/all actual positives for each class
 		// ie. matrix element ii/sum over i of element ij
-		Double[] recall = new Double[matrix.getNumRows()];
+		double[] recall = new double[matrix.getNumRows()];
 		for (int j = 0; j < matrix.getNumCols(); ++j) {
 			Double tp = matrix.getElement(j, j);
 			Double p = 0.0;

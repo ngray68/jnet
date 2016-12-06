@@ -17,11 +17,11 @@ public class TestConfusionMatrix {
 	@Before
 	public void setUp() throws Exception 
 	{
-		Vector actualOutput = new Vector(new Double[]{0.9, 0.1, 0.1});
-		Vector expectedOutput = new Vector(new Double[]{1.0, 0.0, 0.0});
+		Vector actualOutput = new Vector(new double[]{0.9, 0.1, 0.1});
+		Vector expectedOutput = new Vector(new double[]{1.0, 0.0, 0.0});
 		confusionMatrix = new ConfusionMatrix(expectedOutput, actualOutput);
-		actualOutput = new Vector(new Double[]{0.1, 0.9, 0.1});
-		expectedOutput = new Vector(new Double[]{1.0, 0.0, 0.0});
+		actualOutput = new Vector(new double[]{0.1, 0.9, 0.1});
+		expectedOutput = new Vector(new double[]{1.0, 0.0, 0.0});
 		confusionMatrix.addDataInstance(expectedOutput, actualOutput);
 	}
 
@@ -35,8 +35,8 @@ public class TestConfusionMatrix {
 	public void testAddDataInstance() 
 	{
 		assertThat("Expect 1 instance, got more than 1", confusionMatrix.getNumInstances(), is(2));
-		Vector actualOutput = new Vector(new Double[]{0.1, 0.9, 0.1});
-		Vector expectedOutput = new Vector(new Double[]{1.0, 0.0, 0.0});
+		Vector actualOutput = new Vector(new double[]{0.1, 0.9, 0.1});
+		Vector expectedOutput = new Vector(new double[]{1.0, 0.0, 0.0});
 		confusionMatrix.addDataInstance(expectedOutput, actualOutput);
 		assertThat("Expect 2 instances", confusionMatrix.getNumInstances(), is(3));	
 	}

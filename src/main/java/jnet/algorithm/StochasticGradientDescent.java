@@ -1,6 +1,5 @@
 package jnet.algorithm;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 			// aspect of the algorithm from the stochastic gradient descent
 			batches.forEach(
 					batch -> { 
-						logger.log(Level.INFO, String.format("Training minibatch...%d", batchNo));
+						//logger.log(Level.INFO, String.format("Training minibatch...%d", batchNo));
 							batch.getDataInstances().forEach(
 								(instance) -> { calculateAndCaptureGradient(network, instance, costFunction); }
 											);

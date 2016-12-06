@@ -28,6 +28,13 @@ public class DataSet {
 		return new DataSet(trainingSetFraction);
 	}
 	
+	public static DataSet create(double trainingFraction, double validationFraction) throws DataException {
+		if (trainingFraction + validationFraction > 1.0)
+			throw new DataException("DataSet training subset cannot be larger than the parent dataset (choose Training Set Fraction + Validation Set Fraction <= 1.0)");
+		return new DataSet(trainingFraction, validationFraction);
+	}
+
+	
 	public static DataSet create()
 	{
 		return new DataSet();
@@ -38,17 +45,17 @@ public class DataSet {
 	public void normalize() 
 	{
     	Iterator<DataInstance> iter = getIterator();
-    	Double[] maxValues = null;
-    	Double[] minValues = null;
+    	double[] maxValues = null;
+    	double[] minValues = null;
     	while (iter.hasNext()) {
     		Vector inputs = iter.next().getInputs();
     		if (maxValues == null)
-    			maxValues = new Double[inputs.getSize()];
+    			maxValues = new double[inputs.getSize()];
     		if (minValues == null)
-    			minValues = new Double[inputs.getSize()];
+    			minValues = new double[inputs.getSize()];
     		for (int i = 0; i < inputs.getSize(); ++i) {
-    			minValues[i] = minValues[i] == null || minValues[i] > inputs.getElement(i) ? inputs.getElement(i) : minValues[i];
-    			maxValues[i] = maxValues[i] == null || maxValues[i] < inputs.getElement(i) ? inputs.getElement(i) : maxValues[i];
+    			minValues[i] =  minValues[i] > inputs.getElement(i) ? inputs.getElement(i) : minValues[i];
+    			maxValues[i] =  maxValues[i] < inputs.getElement(i) ? inputs.getElement(i) : maxValues[i];
     		}
     	}
     	
@@ -166,6 +173,14 @@ public class DataSet {
 		this.testSetFraction = validationSetFraction;
 	}
 	
+	private DataSet(double trainingSetFraction, double validationSetFraction)
+	{
+		this.dataInstances = new ArrayList<>();
+		this.trainingSetFraction = trainingSetFraction;
+		this.validationSetFraction = validationSetFraction;
+		this.testSetFraction = 1.0 - trainingSetFraction - validationSetFraction;
+	}
+	
 	private DataSet(List<DataInstance> dataSet) 
 	{
 		this.dataInstances = dataSet;
@@ -189,7 +204,5 @@ public class DataSet {
 	private int getNumTestInstances()
 	{
 		return (int)(dataInstances.size() * testSetFraction);
-	}
-
-	
+	}	
 }

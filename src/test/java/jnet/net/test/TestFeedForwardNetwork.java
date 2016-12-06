@@ -20,8 +20,8 @@ public class TestFeedForwardNetwork extends TestCase {
 		CostFunction costFunction = new MeanSquaredError(); //(expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
 		DataSet dataSet = DataSet.create();	
 		
-		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
-		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
+		Vector inputs = new Vector(new double[] {1.0,2.0,1.0});
+		Vector expectedOutput = new Vector(new double[] {0.0,1.0,0.0});
 		
 		for (int i = 0; i < 10; ++i) {
 			dataSet.addInstance(new DataInstance(inputs, expectedOutput));
@@ -44,8 +44,8 @@ public class TestFeedForwardNetwork extends TestCase {
 	public void testEvaluate() {
 		//fail("Not yet implemented");
 		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3});
-		Vector inputs = new Vector(new Double[] {1.0,2.0,1.0});
-		Vector expectedOutput = new Vector(new Double[] {0.0,1.0,0.0});
+		Vector inputs = new Vector(new double[] {1.0,2.0,1.0});
+		Vector expectedOutput = new Vector(new double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);
 		try {
 			network.evaluate(instance);

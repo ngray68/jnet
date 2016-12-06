@@ -1,80 +1,169 @@
 package jnet.net;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
+/**
+ * Simple matrix implementation
+ * Minimum needed for feed forward network
+ * Possibly replace with a library implemention at some point
+ * @author nigelgray
+ *
+ */
 public class Matrix {
-
-	private final Double[][] values;
-	private final int rows;
-	private final int cols;
 	
-	public Matrix(List<List<Double>> values) {
-		this.rows = values.size();
-		this.cols = values.get(0).size();
-		this.values = new Double[rows][cols];
-		for (int i = 0; i < rows; ++i) {
-			for (int j = 0; j < cols; ++j) {
-				this.values[i][j] = values.get(i).get(j);
+	/**
+	 * The elements of the matrix
+	 * Rows are offset by numCols
+	 */
+	private final double[] elements;
+	
+	/**
+	 * The number of rows in the matrix
+	 */
+	private final int numRows;
+	
+	/**
+	 * The number of columns in the matrix
+	 */
+	private final int numCols;
+	
+	/**
+	 * Return a new Matrix element which is the sum of
+	 * the two matrix parameters lhs and rhs. The supplied
+	 * parameters must be the same size, or an AssertionError
+	 * is thrown
+	 * @param lhs
+	 * @param rhs
+	 * @return sum of lhs and rhs
+	 */
+	public static Matrix add(Matrix lhs, Matrix rhs)
+	{
+		assert (lhs.getNumRows() == rhs.getNumRows());
+		assert (lhs.getNumCols() == rhs.getNumCols());
+		Matrix result = new Matrix(lhs.getNumRows(), lhs.getNumCols());
+		for (int i = 0; i < lhs.getNumRows(); ++i) {
+			for (int j = 0; j < lhs.getNumCols(); ++j) {
+				result.setElement(i, j, lhs.getElement(i, j) + rhs.getElement(i, j));
 			}
-		}	
+		}
+		return result;
 	}
 	
 	/**
-	 * Initialize the matrix with the array values
-	 * The matrix owns the array after initialization
-	 * @param values
+	 * Multiply the matrix M by the scalar quantity
+	 * @param scalar
+	 * @param M
+	 * @return
 	 */
-	public Matrix(Double[][] values) {
-		assert (values.length > 0);
-		assert (values[0].length > 0);
-		this.rows = values.length;
-		this.cols = values[0].length;
-		this.values = values;
-	}
-	
-	public Matrix(int rows, int cols) {
-		this.rows = rows;
-		this.cols = cols;
-		this.values = new Double[rows][cols];
-		for (int i = 0; i < rows; ++i) {
-			for (int j = 0; j < cols; ++j) {
-				this.values[i][j] = 0.0;
+	public static Matrix multiply(double scalar, Matrix M)
+	{
+		Matrix result = new Matrix(M.getNumRows(), M.getNumCols());
+		for (int i = 0; i < M.getNumRows(); ++i) {
+			for (int j = 0; j < M.getNumCols(); ++j) {
+				result.setElement(i, j, M.getElement(i, j) * scalar);
 			}
-		}	
-		
+		}
+		return result;
 	}
 	
-	public Matrix(int rows, int cols, Random random) {
-		this.rows = rows;
-		this.cols = cols;
-		this.values = new Double[rows][cols];
-		for (int i = 0; i < rows; ++i) {
-			for (int j = 0; j < cols; ++j) {
-				this.values[i][j] = random.nextGaussian();
+	/**
+	 * Multiply the vector V by the Matrix M. M must have the
+	 * same number of cols as dimension of V.
+	 * @param M
+	 * @param v
+	 * @return Vector which is the product of M and V
+	 */
+	public static Vector multiply(Matrix M, Vector v) 
+	{
+		assert (M.getNumCols() == v.getSize());
+		
+		Vector result = new Vector(M.getNumRows());
+		for (int i = 0; i < M.getNumRows(); ++i) {		
+			double sum = 0;
+			for (int j = 0; j < M.getNumCols(); ++j) {
+				sum = sum + M.getElement(i, j) * v.getElement(j);
 			}
-		}		
-	}
-	
-	public int getNumRows() {
-		return rows;
-	}
-	
-	public int getNumCols() {
-		return cols;
-	}
-	
-	public double getElement(int row, int col) {
-		assert (row >= 0 && row < rows);
-		assert (col >= 0 && col < cols);
+			result.setElement(i, sum);				
+		}
 		
-		return values[row][col];
-		
+		return result;
+	}
+	
+	/**
+	 * Return a new Matrix which is the transpose of M
+	 * @param M
+	 * @return
+	 */
+	public static Matrix transpose(Matrix M) 
+	{
+		Matrix result = new Matrix(M.getNumCols(), M.getNumRows());
+		for (int i = 0; i < M.getNumCols(); ++i) {
+			for (int j = 0; j < M.getNumRows(); ++j) {
+				result.setElement(i, j, M.getElement(j, i));
+			}
+		}
+		return result;
 	}
 
+	/**
+	 * Construct a numRows x numCols matrix whose
+	 * elements are all zero
+	 * @param numRows
+	 * @param numCols
+	 */
+	public Matrix(int numRows, int numCols)
+	{
+		elements = new double[numRows * numCols];
+		this.numRows = numRows;
+		this.numCols = numCols;
+		for (int i = 0; i < numRows; ++i) {
+			for (int j = 0; j < numCols; ++j) {
+				elements[i * numCols + j] = 0.0;
+			}
+		}
+	}
+	
+	/**
+	 * Construct a numRows x numCols matrix whose elements
+	 * are randomly initialized with a Guassian distribution
+	 * @param numRows
+	 * @param numCols
+	 * @param random
+	 */
+	public Matrix(int numRows, int numCols, Random random)
+	{
+		elements = new double[numRows * numCols];
+		this.numRows = numRows;
+		this.numCols = numCols;
+		for (int i = 0; i < numRows; ++i) {
+			for (int j = 0; j < numCols; ++j) {
+				elements[i * numCols + j] = random.nextGaussian();
+			}
+		}
+	}
+	
+	/**
+	 * Construct a matrix which is initialized with the 2-dimensional
+	 * array of doubles
+	 * @param values
+	 */
+	public Matrix(double[][] values) 
+	{
+		assert (values.length > 0);
+		assert (values[0].length > 0);
+		numRows = values.length;
+		numCols = values[0].length;
+		elements = new double[numRows * numCols];
+		for (int i = 0; i < numRows; ++i) {
+			for (int j = 0; j < numCols; ++j) {
+				elements[i * numCols + j] = values[i][j];
+			}
+		}
+	}
+	
 	@Override
-	public boolean equals(Object right) {
+	public boolean equals(Object right) 
+	{
 		Matrix rhs = (Matrix)right;
 		if (this == right)
 			return true;
@@ -94,69 +183,62 @@ public class Matrix {
 	}
 	
 	/**
-	 * Add the supplied matrix to this matrix.
-	 * This matrix contains the sum on completion
-	 * @param right
+	 * Get the number of rows
 	 * @return
 	 */
-	public Matrix add( Matrix right) {
-		assert (this.getNumRows() == right.getNumRows());
-		assert (this.getNumCols() == right.getNumCols());
-		
+	public int getNumRows()
+	{
+		return numRows;
+	}
+	
+	/**
+	 * Get the number of columns
+	 * @return
+	 */
+	public int getNumCols()
+	{
+		return numCols;
+	}
+	
+	/**
+	 * Return the value of the element at (row,col)
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public double getElement(int row, int col)
+	{
+		return elements[row * getNumCols() + col];
+	}
+	
+	/**
+	 * Set the value of the element at (row, col)
+	 * @param row
+	 * @param col
+	 * @param value
+	 */
+	public void setElement(int row, int col, double value)
+	{
+		elements[row * getNumCols() + col] = value;
+	}
+	
+	/**
+	 * Add the Matrix rhs to this Matrix
+	 * This matrix contains the sum on completion
+	 * Matrices must be the same size or an AssertionError
+	 * is thrown
+	 * @param rhs
+	 * @return
+	 */
+	public Matrix add(Matrix rhs)
+	{
+		assert (this.getNumRows() == rhs.getNumRows());
+		assert (this.getNumCols() == rhs.getNumCols());
 		for (int i = 0; i < this.getNumRows(); ++i) {
 			for (int j = 0; j < this.getNumCols(); ++j) {
-				values[i][j] = this.getElement(i, j) + right.getElement(i,j);
+				this.setElement(i, j, this.getElement(i, j) + rhs.getElement(i, j));
 			}
 		}
-		
 		return this;
-	}
-
-	public static Matrix add(Matrix left, Matrix right) {
-		assert (left.getNumRows() == right.getNumRows());
-		assert (left.getNumCols() == right.getNumCols());
-		Double[][] sum = new Double[left.getNumRows()][left.getNumCols()];
-		for (int i = 0; i < left.getNumRows(); ++i) {
-			for (int j = 0; j < left.getNumCols(); ++j) {
-				sum[i][j] = left.getElement(i, j) + right.getElement(i,j);
-			}
-		}
-		
-		return new Matrix(sum);
-	}
-	
-	public static Vector multiply(Matrix M, Vector v) {
-		assert (M.getNumCols() == v.getSize());
-	
-		ArrayList<Double> result = new ArrayList<Double>();
-		for (int i = 0; i < M.getNumRows(); ++i) {
-			double ithRow = 0;
-			for (int j = 0; j < M.getNumCols(); ++j) {
-				ithRow = ithRow + M.getElement(i, j) * v.getElement(j);
-			}
-			result.add(ithRow);
-		}
-		return new Vector(result);
-	}
-	
-	public static Matrix multiply(double scalar, Matrix M) {
-		Double[][] result = new Double[M.getNumRows()][M.getNumCols()];
-		for (int i = 0; i < M.getNumRows(); ++i) {
-			for (int j = 0; j < M.getNumCols(); ++j) {
-				result[i][j] = M.getElement(i, j) * scalar;
-			}
-		}
-		return new Matrix(result);
-	}
-	
-	public static Matrix transpose(Matrix M) {
-		List<List<Double>> transpose = new ArrayList<List<Double>>(M.getNumCols());
-		for (int i = 0; i < M.getNumCols(); ++i) {
-			transpose.add(i, new ArrayList<Double>(M.getNumRows()));
-			for (int j = 0; j < M.getNumRows(); ++j) {
-				transpose.get(i).add(j, M.getElement(j,i));
-			}
-		}
-		return new Matrix(transpose);
 	}
 }

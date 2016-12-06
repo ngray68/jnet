@@ -20,26 +20,26 @@ public class TestMatrix extends TestCase {
 
 	public void testGetElement() {
 		//fail("Not yet implemented");
-		Matrix matrix = new Matrix(new Double[][] { {5.0} });
+		Matrix matrix = new Matrix(new double[][] { {5.0} });
 		assert (matrix.getElement(0, 0) == 5.0);
 	}
 
 	public void testAdd() {
 		//fail("Not yet implemented");
-		Matrix left = new Matrix(new Double[][] { {5.0,6.0}, {4.0, 5.0} });
-		Matrix right = new Matrix(new Double[][] { {2.0, 3.0}, {3.0, 2.0} });
-		Matrix sum = new Matrix(new Double[][]{ {7.0, 9.0}, {7.0, 7.0} });
+		Matrix left = new Matrix(new double[][] { {5.0,6.0}, {4.0, 5.0} });
+		Matrix right = new Matrix(new double[][] { {2.0, 3.0}, {3.0, 2.0} });
+		Matrix sum = new Matrix(new double[][]{ {7.0, 9.0}, {7.0, 7.0} });
 		assert (Matrix.add(left, right).equals(sum));
 	}
 
 	public void testTranspose() {
 		//fail("Not yet implemented");
-		Matrix matrix = new Matrix(new Double[][] {
+		Matrix matrix = new Matrix(new double[][] {
 			{1.0,2.0,3.0},
 			{4.0,5.0,6.0}
 		});
 		
-		Matrix transpose = new Matrix(new Double[][] {
+		Matrix transpose = new Matrix(new double[][] {
 			{1.0, 4.0},
 			{2.0, 5.0},
 			{3.0, 6.0}
@@ -50,13 +50,13 @@ public class TestMatrix extends TestCase {
 
 	public void testMultiply() {
 		//fail("Not yet implemented");
-		Matrix M = new Matrix(new Double[][] {
+		Matrix M = new Matrix(new double[][] {
 			{1.0,2.0,3.0},
 			{4.0,5.0,6.0}
 		});
 		
-		Vector v = new Vector(new Double[] {4.0, 5.0, 6.0});
-		Vector product = new Vector(new Double[] {32.0, 77.0});		
+		Vector v = new Vector(new double[] {4.0, 5.0, 6.0});
+		Vector product = new Vector(new double[] {32.0, 77.0});		
 		assert (Matrix.multiply(M, v).equals(product));
 	}
 

@@ -57,10 +57,29 @@ public class DataSetLoader {
 	 */
 	public static DataSet loadFromFile(String filename, String fileFormat, int numExpectedOutputs) throws DataException
 	{
+		return loadFromFile(filename, fileFormat, numExpectedOutputs, 0.8, 0.1);
+		/*
 		if (checkFileFormat(fileFormat) == FileFormat.UNSUPPORTED) {
 			throw new DataException("File format" + fileFormat + " unsupported");
 		}
 		DataSet dataSet = DataSet.create();
+		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+			String nextLine = null;
+			while ((nextLine = reader.readLine()) != null) {
+				dataSet.addInstance(parseCsvLine(nextLine, numExpectedOutputs));
+			}
+		} catch (IOException e) {
+			throw new DataException(e);
+		}
+		return dataSet;*/
+	}
+	
+	public static DataSet loadFromFile(String filename, String fileFormat, int numExpectedOutputs, double trainingFraction, double validationFraction) throws DataException
+	{
+		if (checkFileFormat(fileFormat) == FileFormat.UNSUPPORTED) {
+			throw new DataException("File format" + fileFormat + " unsupported");
+		}
+		DataSet dataSet = DataSet.create(trainingFraction, validationFraction);
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String nextLine = null;
 			while ((nextLine = reader.readLine()) != null) {

@@ -94,7 +94,7 @@ public class FeedForwardNetwork implements Network {
 		for(Iterator<DataInstance> instanceIter = dataSet.getIterator(); instanceIter.hasNext(); ) {
 			DataInstance instance = instanceIter.next();
 			if (instance == null) {
-				throw new NullPointerException("Cannot evualate null data instance");
+				throw new NetworkException("Cannot evualate null data instance");
 			}
 			stats.addStatistics(instance, evaluate(instance), costFunction);
 		}
@@ -106,7 +106,7 @@ public class FeedForwardNetwork implements Network {
 	{
 		for (Layer layer : layers) {
 			if (layer == null) {
-				throw new NullPointerException("Null pointer to network Layer detected - stopping evaluation");
+				throw new NetworkException("Null pointer to network Layer detected - stopping evaluation");
 			}
 			if (layer.getPrevious() == null || layer.getActivationFunction() == null) {
 				layer.setActivation(instance.getInputs());
@@ -118,7 +118,7 @@ public class FeedForwardNetwork implements Network {
 		}	
 		return getOutput();
 	}
-	
+		
 	@Override
 	public Layer getInputLayer()
 	{
