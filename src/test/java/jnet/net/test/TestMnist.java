@@ -12,7 +12,6 @@ import jnet.data.DataSet;
 import jnet.data.DataSetLoader;
 import jnet.net.CostFunction;
 import jnet.net.FeedForwardNetwork;
-import jnet.net.MaxTrueOutputPostProcessor;
 import jnet.net.MeanSquaredError;
 import jnet.net.NetworkException;
 
