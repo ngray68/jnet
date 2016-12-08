@@ -2,7 +2,7 @@ package jnet.net.test;
 
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
-import jnet.net.MeanSquaredError;
+import jnet.net.QuadraticCostFunction;
 import jnet.net.NetworkException;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataInstance;
@@ -17,7 +17,7 @@ public class TestFeedForwardNetwork extends TestCase {
 		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3});
 		
 		
-		CostFunction costFunction = new MeanSquaredError(); //(expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
+		CostFunction costFunction = new QuadraticCostFunction(); //(expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
 		DataSet dataSet = DataSet.create();	
 		
 		Vector inputs = new Vector(new double[] {1.0,2.0,1.0});

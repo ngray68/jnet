@@ -142,6 +142,15 @@ public class ConfusionMatrix {
 		Vector unit = new Vector(v.getSize(), 1.0);
 		double sum = Vector.dotProduct(unit, v);
 		return Vector.multiply((1.0/sum), v);	
+		/*
+		Vector choose = new Vector(v.getSize());
+		for (int i = 0; i < v.getSize(); ++i) {
+			if (v.getElement(i) > 0.5) {
+				choose.setElement(i, 1.0);
+				break;
+			}
+		}
+		return choose;*/
 	}
 	
 }

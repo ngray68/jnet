@@ -2,7 +2,7 @@ package jnet.net.test;
 
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
-import jnet.net.MeanSquaredError;
+import jnet.net.QuadraticCostFunction;
 import jnet.net.NetworkException;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.algorithm.StochasticGradientDescent;
@@ -28,7 +28,7 @@ public class TestWine extends TestCase {
 	public void testWine() {
 		//fail("Not yet implemented");
 		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {13, 6, 3});
-		CostFunction costFunction = new MeanSquaredError();
+		CostFunction costFunction = new QuadraticCostFunction();
 		int numEpochs = 500;
 		double learningRate = 0.25;
 		int batchSize = 5;

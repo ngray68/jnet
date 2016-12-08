@@ -1,8 +1,8 @@
 package jnet.net;
 
-public class MeanSquaredError implements CostFunction {
+public class QuadraticCostFunction implements CostFunction {
 
-	public MeanSquaredError() 
+	public QuadraticCostFunction() 
 	{	
 	}
 	

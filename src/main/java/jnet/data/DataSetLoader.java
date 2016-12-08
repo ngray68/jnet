@@ -3,6 +3,8 @@ package jnet.data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,11 +60,15 @@ public class DataSetLoader {
 	public static DataSet loadFromFile(String filename, String fileFormat, int numExpectedOutputs) throws DataException
 	{
 		return loadFromFile(filename, fileFormat, numExpectedOutputs, 0.8, 0.1);
-		/*
+	}
+	
+	public static DataSet loadFromFile(String filename, String fileFormat, int numExpectedOutputs, double trainingFraction, double validationFraction) throws DataException
+	{
 		if (checkFileFormat(fileFormat) == FileFormat.UNSUPPORTED) {
 			throw new DataException("File format" + fileFormat + " unsupported");
 		}
-		DataSet dataSet = DataSet.create();
+		
+		DataSet dataSet = DataSet.create(trainingFraction, validationFraction);
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String nextLine = null;
 			while ((nextLine = reader.readLine()) != null) {
@@ -71,16 +77,21 @@ public class DataSetLoader {
 		} catch (IOException e) {
 			throw new DataException(e);
 		}
-		return dataSet;*/
+		return dataSet;
 	}
 	
-	public static DataSet loadFromFile(String filename, String fileFormat, int numExpectedOutputs, double trainingFraction, double validationFraction) throws DataException
+	public static DataSet loadFromInputStream(InputStream stream, String fileFormat, int numExpectedOutputs, double trainingFraction, double validationFraction) throws DataException
 	{
+		if (stream == null) {
+			throw new DataException("Attempt to load DataSet from null InputStream");
+		}
+
 		if (checkFileFormat(fileFormat) == FileFormat.UNSUPPORTED) {
 			throw new DataException("File format" + fileFormat + " unsupported");
 		}
+		
 		DataSet dataSet = DataSet.create(trainingFraction, validationFraction);
-		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
 			String nextLine = null;
 			while ((nextLine = reader.readLine()) != null) {
 				dataSet.addInstance(parseCsvLine(nextLine, numExpectedOutputs));
@@ -98,9 +109,10 @@ public class DataSetLoader {
 	 */
 	public static FileFormat checkFileFormat(String fileFormat) 
 	{
-		if (!fileFormat.equals("csv"))
-				return FileFormat.UNSUPPORTED;
-		return FileFormat.CSV;
+		if (fileFormat.equals("csv"))
+			return FileFormat.CSV;
+		
+		return FileFormat.UNSUPPORTED;
 	}
 	
 	/**

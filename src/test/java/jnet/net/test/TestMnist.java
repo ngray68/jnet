@@ -2,6 +2,10 @@ package jnet.net.test;
 
 import static org.junit.Assert.*;
 
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,22 +16,27 @@ import jnet.data.DataSet;
 import jnet.data.DataSetLoader;
 import jnet.net.CostFunction;
 import jnet.net.FeedForwardNetwork;
-import jnet.net.MeanSquaredError;
+import jnet.net.QuadraticCostFunction;
 import jnet.net.NetworkException;
 
 public class TestMnist {
 
-	private String trainingSetFileName = "./src/test/resources/mnist_train.csv";
+	private String trainingSetZip = "./src/test/resources/mnist_train.csv.zip";
+	private String trainingSetFileName = "mnist_train.csv";
 	private String testSetFileName = "./src/test/resources/mnist_test.csv";
 	private DataSet trainingSet;
 	private DataSet testSet;
 	
 	@Before
 	public void setUp() throws Exception {
-		trainingSet = DataSetLoader.loadFromFile(trainingSetFileName, "csv", 10, 0.9, 0.1);
-		trainingSet.normalize();
-		testSet = DataSetLoader.loadFromFile(testSetFileName, "csv", 10, 1.0, 0.0);
-		testSet.normalize();
+		try (ZipFile zipFile = new ZipFile(trainingSetZip)) {
+			ZipEntry entry = zipFile.getEntry(trainingSetFileName);
+			InputStream stream = zipFile.getInputStream(entry);
+			trainingSet = DataSetLoader.loadFromInputStream(stream, "csv", 10, 5.0/6.0, 1.0/6.0);
+			trainingSet.normalize();
+			testSet = DataSetLoader.loadFromFile(testSetFileName, "csv", 10, 1.0, 0.0);
+			testSet.normalize();
+		}
 	}
 
 	@After
@@ -37,11 +46,12 @@ public class TestMnist {
 	@Test
 	public void testMnist() {
 		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10});
-		CostFunction costFunction = new MeanSquaredError();
+		CostFunction costFunction = new QuadraticCostFunction();
 		int numEpochs = 30;
-		double learningRate = 5.0;
+		double learningRate = 3.0;
+		double momentum = 0.0;
 		int batchSize = 10;
-		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, 0);
+		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, momentum);
 		try {
 			network.validateOrTest(testSet, costFunction).print(false);
 			network.train(trainingSet, testSet, sgd, costFunction);
