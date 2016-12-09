@@ -27,33 +27,6 @@ public class FeedForwardNetwork implements Network {
 			layers.add(i, new Layer(layerSizes[i], layers.get(i-1), new SigmoidFunction()));
 		}
 	}
-	/*
-	@Override
-	public void train(DataSet trainingSet, DataSet testSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException
-	{
-		logger.log(Level.INFO, "Starting training...");
-		if (trainingSet == null || testSet == null)
-			throw new NetworkException("DataSet cannot be null");
-		if (algorithm == null)
-			throw new NetworkException("LearningAlgorithm cannot be null");
-		if (costFunction == null)
-			throw new NetworkException("CostFunction cannot be null");
-		
-		if (trainingSet.isEmpty() || testSet.isEmpty()) {
-			logger.log(Level.WARNING, "Network.train() called with empty dataset - doing nothing");
-			return;
-		}
-		
-		// make sure the data set is shuffled
-		trainingSet.shuffle();
-		
-		// split the data set into training, validation sets
-		algorithm.execute(this, trainingSet.getTrainingSubset(), trainingSet.getValidationSubset(), costFunction);
-
-		Statistics testStats = validateOrTest(testSet, costFunction);
-		testStats.print(true);
-		
-	}*/
 	
 	@Override
 	public void train(DataSet trainingSet, DataSet validationSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException 
