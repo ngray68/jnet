@@ -29,7 +29,7 @@ public class TestFeedForwardNetwork extends TestCase {
 		
 		StochasticGradientDescent sgd = new StochasticGradientDescent(1,5, 0.005, 0);
 		try {
-			network.train(dataSet, sgd, costFunction);
+			network.train(dataSet.getTrainingSubset(), dataSet.getValidationSubset(), sgd, costFunction);
 		} catch (NetworkException e) {
 			assertTrue("Test failed", false);
 			e.printStackTrace();

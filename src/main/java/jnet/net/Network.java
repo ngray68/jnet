@@ -16,24 +16,13 @@ public interface Network {
 	 * Call this method to train the neural network with the given trainingSet, where the
 	 * testSet is separately supplied
 	 * @param trainingSet
-	 * @param testSet
+	 * @param validationSet
 	 * @param algorithm
 	 * @param costFunction
 	 * @throws NetworkException
 	 */
 	void train(DataSet trainingSet, DataSet testSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException;
-	
-	/**
-	 * Call this method to train the neural network with the given
-	 * data set, learning algorithm, and cost function
-	 * Hyper-parameters are provided by the learning algorithm
-	 * @param trainingSet
-	 * @param algorithm
-	 * @param costFunction
-	 * @throws NetworkException 
-	 */
-	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException;
-	
+		
 	/**
 	 * Call this method to validate or test a trained or partially trained 
 	 * neural network

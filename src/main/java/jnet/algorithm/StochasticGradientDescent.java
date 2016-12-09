@@ -67,7 +67,7 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 			// aspect of the algorithm from the stochastic gradient descent
 			batches.forEach(
 					batch -> { 
-						//logger.log(Level.INFO, String.format("Training minibatch...%d", batchNo));
+							logger.log(Level.FINE, String.format("Training minibatch...%d", batchNo));
 							batch.getDataInstances().forEach(
 								(instance) -> { calculateAndCaptureGradient(network, instance, costFunction); }
 											);

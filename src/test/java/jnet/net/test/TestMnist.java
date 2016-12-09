@@ -54,7 +54,8 @@ public class TestMnist {
 		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, momentum);
 		try {
 			network.validateOrTest(testSet, costFunction).print(false);
-			network.train(trainingSet, testSet, sgd, costFunction);
+			network.train(trainingSet.getTrainingSubset(), trainingSet.getValidationSubset(), sgd, costFunction);
+			network.validateOrTest(testSet, costFunction).print(true);
 		} catch (NetworkException e) {
 			assertTrue("Test failed", false);
 			e.printStackTrace();

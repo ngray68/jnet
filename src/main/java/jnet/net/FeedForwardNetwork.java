@@ -27,7 +27,7 @@ public class FeedForwardNetwork implements Network {
 			layers.add(i, new Layer(layerSizes[i], layers.get(i-1), new SigmoidFunction()));
 		}
 	}
-	
+	/*
 	@Override
 	public void train(DataSet trainingSet, DataSet testSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException
 	{
@@ -53,36 +53,32 @@ public class FeedForwardNetwork implements Network {
 		Statistics testStats = validateOrTest(testSet, costFunction);
 		testStats.print(true);
 		
-	}
+	}*/
 	
 	@Override
-	public void train(DataSet dataSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException 
+	public void train(DataSet trainingSet, DataSet validationSet, LearningAlgorithm algorithm, CostFunction costFunction) throws NetworkException 
 	{
 		logger.log(Level.INFO, "Starting training...");
-		if (dataSet == null)
-			throw new NetworkException("DataSet cannot be null");
+		if (trainingSet == null)
+			throw new NetworkException("Training DataSet cannot be null");
+		if (validationSet == null)
+			throw new NetworkException("Validation DataSet cannot be null");
 		if (algorithm == null)
 			throw new NetworkException("LearningAlgorithm cannot be null");
 		if (costFunction == null)
 			throw new NetworkException("CostFunction cannot be null");
 		
-		if (dataSet.isEmpty()) {
-			logger.log(Level.WARNING, "Network.train() called with empty dataset - doing nothing");
-			return;
+		if (trainingSet.isEmpty()) {
+			throw new NetworkException("Training DataSet empty");
+		}
+		
+		if (validationSet.isEmpty()) {
+			throw new NetworkException("Validation DataSet empty");
 		}
 		
 		// make sure the data set is shuffled
-		dataSet.shuffle();
-		
-		// split the data set into training, validation and test sets
-		DataSet trainingSet = dataSet.getTrainingSubset();
-		DataSet validationSet = dataSet.getValidationSubset();
-		DataSet testSet = dataSet.getTestSubset();
-		
+		trainingSet.shuffle();
 		algorithm.execute(this, trainingSet, validationSet, costFunction);
-
-		Statistics testStats = validateOrTest(testSet, costFunction);
-		testStats.print(true);
 	}
 
 	@Override

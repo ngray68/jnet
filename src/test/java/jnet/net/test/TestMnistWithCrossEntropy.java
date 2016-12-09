@@ -46,16 +46,17 @@ public class TestMnistWithCrossEntropy {
 	
 	@Test
 	public void testMnist() {
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 200, 10});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10});
 		CostFunction costFunction = new CrossEntropyCostFunction();
 		int numEpochs = 30;
-		double learningRate = 1.0;
-		double momentum = 0.7;
+		double learningRate = 2.0;
+		double momentum = 0.5;
 		int batchSize = 10;
 		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, momentum);
 		try {
 			network.validateOrTest(testSet, costFunction).print(false);
-			network.train(trainingSet, testSet, sgd, costFunction);
+			network.train(trainingSet.getTrainingSubset(), trainingSet.getValidationSubset(), sgd, costFunction);
+			network.validateOrTest(testSet, costFunction).print(true);
 		} catch (NetworkException e) {
 			assertTrue("Test failed", false);
 			e.printStackTrace();
