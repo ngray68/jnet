@@ -36,7 +36,8 @@ public class StochasticGradientDescent implements LearningAlgorithm {
 
 	private int batchNo;
 	
-	public StochasticGradientDescent(int numEpochs, int batchSize, double learningRate, double momentum) {
+	public StochasticGradientDescent(int numEpochs, int batchSize, double learningRate, double momentum)
+	{
 		this.numEpochs = numEpochs;
 		this.batchSize = batchSize;
 		this.learningRate = learningRate;
