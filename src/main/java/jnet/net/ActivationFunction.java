@@ -1,5 +1,9 @@
 package jnet.net;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Network activation functions implement this interface
  * Note that despite the name, this is not a functional interface
@@ -7,6 +11,37 @@ package jnet.net;
  *
  */
 public interface ActivationFunction {
+	
+	final static Map<String, ActivationFunction> functions = new HashMap<>();
+	
+	/**
+	 * Factory method for activation functions
+	 * @param activationFunctionType
+	 * @return
+	 * @throws NetworkException
+	 */
+	public static ActivationFunction create(String activationFunctionType) throws NetworkException
+	{
+		if (functions.isEmpty()) {
+			functions.put("Sigmoid", new SigmoidFunction());
+		}
+		if (!functions.containsKey(activationFunctionType)) {
+			throw new NetworkException("Unknown activation function type " + activationFunctionType);
+		}
+		return functions.get(activationFunctionType);
+	}
+	
+	/**
+	 * Get a collection of supported activation function types
+	 * @return
+	 */
+	public static Set<String> getFunctionTypes()
+	{
+		if (functions.isEmpty()) {
+			functions.put("Sigmoid", new SigmoidFunction());
+		}
+		return functions.keySet();
+	}
 	
 	/**
 	 * Implement this function as a function of the weightedInput
