@@ -42,7 +42,9 @@ public class Statistics {
 			outputs = new HashMap<>();
 		
 		
-		double error = costFunction.cost(networkOutput, instance.getExpectedOutputs());
+		//double error = costFunction.cost(networkOutput, instance.getExpectedOutputs());
+		Vector errorVector = Vector.add(networkOutput, Vector.multiply(-1.0,instance.getExpectedOutputs()));
+		double error = Math.sqrt(Vector.dotProduct(errorVector, errorVector));
 		errors.put(instance, error);
 		sumError += error;
 	
@@ -111,7 +113,7 @@ public class Statistics {
 	}
 	
 	/**
-	 * Return the accuracy
+	 * Return the recall
 	 * @return
 	 */
 	public Vector getRecall()
