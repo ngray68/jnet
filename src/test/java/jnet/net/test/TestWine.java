@@ -34,6 +34,7 @@ public class TestWine extends TestCase {
 		double learningRate = 0.25;
 		int batchSize = 5;
 		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, 0);
+		
 		try {
 			network.train(dataSet.getTrainingSubset(), dataSet.getValidationSubset(), sgd, costFunction);
 		} catch (NetworkException e) {

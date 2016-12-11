@@ -47,12 +47,14 @@ public class TestMnist {
 	@Test
 	public void testMnist() {
 		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10}, new SigmoidFunction());
+		
 		CostFunction costFunction = new QuadraticCostFunction();
 		int numEpochs = 30;
 		double learningRate = 3.0;
 		double momentum = 0.0;
 		int batchSize = 10;
 		LearningAlgorithm sgd = new StochasticGradientDescent(numEpochs, batchSize, learningRate, momentum);
+		
 		try {
 			network.validateOrTest(testSet, costFunction).print(false);
 			network.train(trainingSet.getTrainingSubset(), trainingSet.getValidationSubset(), sgd, costFunction);

@@ -53,6 +53,7 @@ public class TestFeedForwardNetwork extends TestCase {
 		} catch (NetworkException e) {
 			assertTrue("Test failed", false);
 			e.printStackTrace();
+			
 		}
 	
 	}
