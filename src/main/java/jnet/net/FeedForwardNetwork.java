@@ -17,14 +17,14 @@ public class FeedForwardNetwork implements Network {
 	private List<Layer> layers;
 	private static Logger logger = Logger.getGlobal();
 	
-	public FeedForwardNetwork(int[] layerSizes) 
+	public FeedForwardNetwork(int[] layerSizes, ActivationFunction activationFunction) 
 	{
 		assert (layerSizes.length > 0);
 		logger.log(Level.INFO, "Creating neural network\n");
 		layers = new ArrayList<Layer>();
 		layers.add(0, new Layer(layerSizes[0], null, null));
 		for (int i = 1; i < layerSizes.length; ++i) {
-			layers.add(i, new Layer(layerSizes[i], layers.get(i-1), new SigmoidFunction()));
+			layers.add(i, new Layer(layerSizes[i], layers.get(i-1), activationFunction));
 		}
 	}
 	
