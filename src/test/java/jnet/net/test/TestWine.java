@@ -3,6 +3,7 @@ package jnet.net.test;
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.net.QuadraticCostFunction;
+import jnet.net.SigmoidFunction;
 import jnet.net.NetworkException;
 import jnet.algorithm.LearningAlgorithm;
 import jnet.algorithm.StochasticGradientDescent;
@@ -27,7 +28,7 @@ public class TestWine extends TestCase {
 	
 	public void testWine() {
 		//fail("Not yet implemented");
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {13, 6, 3});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {13, 6, 3}, new SigmoidFunction());
 		CostFunction costFunction = new QuadraticCostFunction();
 		int numEpochs = 500;
 		double learningRate = 0.25;

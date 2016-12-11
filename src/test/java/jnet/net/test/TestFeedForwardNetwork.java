@@ -3,6 +3,7 @@ package jnet.net.test;
 import junit.framework.TestCase;
 import jnet.net.CostFunction;
 import jnet.net.QuadraticCostFunction;
+import jnet.net.SigmoidFunction;
 import jnet.net.NetworkException;
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataInstance;
@@ -14,7 +15,7 @@ public class TestFeedForwardNetwork extends TestCase {
 
 	public void testTrain() {
 		//fail("Not yet implemented");
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3}, new SigmoidFunction());
 		
 		
 		CostFunction costFunction = new QuadraticCostFunction(); //(expOutput, output) -> { return Vector.add(expOutput, Vector.multiply(-1.0, output)); };
@@ -43,7 +44,7 @@ public class TestFeedForwardNetwork extends TestCase {
 
 	public void testEvaluate() {
 		//fail("Not yet implemented");
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[]{3,10,3}, new SigmoidFunction());
 		Vector inputs = new Vector(new double[] {1.0,2.0,1.0});
 		Vector expectedOutput = new Vector(new double[] {0.0,1.0,0.0});
 		DataInstance instance = new DataInstance(inputs, expectedOutput);

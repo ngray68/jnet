@@ -17,6 +17,7 @@ import jnet.data.DataSetLoader;
 import jnet.net.CostFunction;
 import jnet.net.FeedForwardNetwork;
 import jnet.net.QuadraticCostFunction;
+import jnet.net.SigmoidFunction;
 import jnet.net.NetworkException;
 
 public class TestMnist {
@@ -45,7 +46,7 @@ public class TestMnist {
 	
 	@Test
 	public void testMnist() {
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10}, new SigmoidFunction());
 		CostFunction costFunction = new QuadraticCostFunction();
 		int numEpochs = 30;
 		double learningRate = 3.0;

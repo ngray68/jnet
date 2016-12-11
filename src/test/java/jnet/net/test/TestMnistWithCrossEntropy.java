@@ -19,6 +19,7 @@ import jnet.net.CrossEntropyCostFunction;
 import jnet.net.FeedForwardNetwork;
 import jnet.net.NetworkException;
 import jnet.net.QuadraticCostFunction;
+import jnet.net.SigmoidFunction;
 
 public class TestMnistWithCrossEntropy {
 
@@ -46,7 +47,7 @@ public class TestMnistWithCrossEntropy {
 	
 	@Test
 	public void testMnist() {
-		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10});
+		FeedForwardNetwork network = new FeedForwardNetwork(new int[] {784, 30, 10}, new SigmoidFunction());
 		CostFunction costFunction = new CrossEntropyCostFunction();
 		int numEpochs = 30;
 		double learningRate = 2.0;
