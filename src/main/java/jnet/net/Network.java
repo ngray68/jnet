@@ -1,5 +1,7 @@
 package jnet.net;
 
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.algorithm.LearningAlgorithm;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;

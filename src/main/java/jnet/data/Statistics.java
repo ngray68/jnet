@@ -3,8 +3,9 @@ package jnet.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.net.CostFunction;
-import jnet.net.Vector;
 
 /**
  * Class Statistics
@@ -43,8 +44,9 @@ public class Statistics {
 		
 		
 		//double error = costFunction.cost(networkOutput, instance.getExpectedOutputs());
-		Vector errorVector = Vector.add(networkOutput, Vector.multiply(-1.0,instance.getExpectedOutputs()));
-		double error = Math.sqrt(Vector.dotProduct(errorVector, errorVector));
+		//Vector errorVector = Vector.add(networkOutput, Vector.multiply(-1.0,instance.getExpectedOutputs()));
+		Vector errorVector = networkOutput.subtract(instance.getExpectedOutputs());
+		double error = Math.sqrt(errorVector.dotProduct(errorVector));
 		errors.put(instance, error);
 		sumError += error;
 	

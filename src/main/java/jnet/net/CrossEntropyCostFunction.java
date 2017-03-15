@@ -1,5 +1,7 @@
 package jnet.net;
 
+import com.ngray.jnet.algebra.Vector;
+
 public class CrossEntropyCostFunction implements CostFunction {
 
 	@Override
@@ -7,23 +9,30 @@ public class CrossEntropyCostFunction implements CostFunction {
 		// TODO Auto-generated method stub
 		// ylna + (1-y)ln(1-a)
 		Vector unit = new Vector(output.getSize(), 1.0);
-		double exp1 = Vector.dotProduct(expectedOutput, ln(output));
+		double exp1 = expectedOutput.dotProduct(ln(output));
+		double exp2 = unit.subtract(expectedOutput).dotProduct(ln(unit.subtract(output)));
+		/*
 		double exp2 = Vector.dotProduct(
 							Vector.add(unit, Vector.multiply(-1.0, expectedOutput)), 
 							ln(Vector.add(unit, Vector.multiply(-1.0, output)))
 							);
+							*/
 		return -(exp1 + exp2);
 	}
 
 	@Override
 	public Vector costPrime(Vector output, Vector expectedOutput) {
 		Vector unit = new Vector(output.getSize(), 1.0);
-		Vector exp1 = Vector.schurProduct(expectedOutput, reciprocal(output));
+		Vector exp1 = expectedOutput.schurProduct(reciprocal(output));
+		Vector exp2 = unit.subtract(expectedOutput).schurProduct(reciprocal(unit.subtract(output)));
+		return exp2.subtract(exp1);
+		/*
 		Vector exp2 = Vector.schurProduct(
 							Vector.add(unit, Vector.multiply(-1.0, expectedOutput)), 
 							reciprocal(Vector.add(unit, Vector.multiply(-1.0, output)))
 							);
-		return Vector.multiply(-1.0, Vector.add(exp1, Vector.multiply(-1.0, exp2)));
+							*/
+		//return Vector.multiply(-1.0, Vector.add(exp1, Vector.multiply(-1.0, exp2)));
 	}
 	
 	private Vector ln(Vector v) 

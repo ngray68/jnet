@@ -2,7 +2,7 @@ package jnet.data;
 
 import java.util.List;
 
-import jnet.net.Vector;
+import com.ngray.jnet.algebra.Vector;
 
 public class DataInstance {
 	

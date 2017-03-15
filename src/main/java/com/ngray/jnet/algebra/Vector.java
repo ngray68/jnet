@@ -1,6 +1,5 @@
-package jnet.net;
+package com.ngray.jnet.algebra;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -9,7 +8,7 @@ import java.util.Random;
  * @author nigelgray
  *
  */
-public class Vector {
+public final class Vector {
 	
 	/**
 	 * The elements of the vector
@@ -154,43 +153,45 @@ public class Vector {
 	}
 	
 	/**
-	 * Add rhs to this Vector.This Vector will contain the sum
-	 * on completion. Vectors must be the same size.
+	 * Add rhs to this Vector. Result is a new vector
+	 * Vectors must be the same size.
 	 * @param right
-	 * @return this
+	 * @return new vector which is the sum of this and right
 	 */
+	
 	public Vector add(Vector right) {
 		assert (this.getSize() == right.getSize());
 		int i = 0;
 		
 		int size = this.getSize();
-		while (i < size) {
-			elements[i] = this.getElement(i) + right.getElement(i);
-			++i;
-		}
-		return this;
-	}
-	
-	/**
-	 * Return a new vector which is the sum of left and right.
-	 * Left and right must be the same size
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	public static Vector add(Vector left, Vector right) {
-		assert (left.getSize() == right.getSize());
-		int i = 0;
-		
-		int size = left.getSize();
 		Vector result = new Vector(size);
 		while (i < size) {
-			result.setElement(i, left.getElement(i) + right.getElement(i));
+			result.setElement(i, this.getElement(i) + right.getElement(i));
 			++i;
 		}
 		return result;
 	}
-
+	
+	/**
+	 * Subtract rhs from this Vector. Result is a new vector
+	 * Vectors must be the same size.
+	 * @param right
+	 * @return new vector which is the sum of this and right
+	 */
+	public Vector subtract(Vector right) {
+		assert (this.getSize() == right.getSize());
+		int i = 0;
+		
+		int size = this.getSize();
+		Vector result = new Vector(size);
+		while (i < size) {
+			result.setElement(i, this.getElement(i) - right.getElement(i));
+			++i;
+		}
+		return result;
+	}
+	
+	
 	/**
 	 * Return a new vector by multiplying the vector V by the scalar value
 	 * 
@@ -198,13 +199,13 @@ public class Vector {
 	 * @param vector
 	 * @return
 	 */
-	public static Vector multiply(double scalarValue, Vector vector) {
+	public Vector multiply(double scalarValue) {
 		int i = 0;
 		
-		int size = vector.getSize();
+		int size = this.getSize();
 		Vector result = new Vector(size);
 		while (i < size) {
-			result.setElement(i, vector.getElement(i) * scalarValue);
+			result.setElement(i, this.getElement(i) * scalarValue);
 			++i;
 		}
 		return result;
@@ -212,18 +213,18 @@ public class Vector {
 	
 	/**
 	 * Return the dotproduct (scalar) of the two vectors
-	 * @param left
+	 * 
 	 * @param right
 	 * @return
 	 */
-	public static double dotProduct(Vector left, Vector right) {
-		assert (left.getSize() == right.getSize());
+	public double dotProduct(Vector right) {
+		assert (this.getSize() == right.getSize());
 		int i = 0;
 		
-		int size = left.getSize();
+		int size = this.getSize();
 		double result = 0;
 		while (i < size) {
-			result = result + left.getElement(i) * right.getElement(i);
+			result = result + this.getElement(i) * right.getElement(i);
 			++i;
 		}
 		return result;
@@ -231,18 +232,18 @@ public class Vector {
 	
 	/**
 	 * Return the schur product of the two vectors
-	 * @param left
+	 * 
 	 * @param right
 	 * @return
 	 */
-	public static Vector schurProduct(Vector left, Vector right) {
-		assert (left.getSize() == right.getSize());
+	public Vector schurProduct(Vector right) {
+		assert (this.getSize() == right.getSize());
 		int i = 0;
 		
-		int size = left.getSize();
+		int size = this.getSize();
 		Vector result = new Vector(size);
 		while (i < size) {
-			result.setElement(i, left.getElement(i) * right.getElement(i));
+			result.setElement(i, this.getElement(i) * right.getElement(i));
 			++i;
 		}
 		return result;
@@ -250,15 +251,15 @@ public class Vector {
 	
 	/**
 	 * Return the dyadic product of the two vectors
-	 * @param left
+	 *
 	 * @param right
 	 * @return
 	 */
-	public static Matrix dyadicProduct(Vector left, Vector right) {
-		Matrix dyad = new Matrix(left.getSize(), right.getSize());
-		for (int i = 0; i < left.getSize(); ++i) {
+	public Matrix dyadicProduct(Vector right) {
+		Matrix dyad = new Matrix(this.getSize(), right.getSize());
+		for (int i = 0; i < this.getSize(); ++i) {
 			for (int j = 0; j < right.getSize(); ++j) {
-				dyad.setElement(i, j, left.getElement(i) * right.getElement(j));
+				dyad.setElement(i, j, this.getElement(i) * right.getElement(j));
 			}
 		}
 		return dyad;

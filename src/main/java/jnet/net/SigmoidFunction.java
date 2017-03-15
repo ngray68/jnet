@@ -2,6 +2,8 @@ package jnet.net;
 
 import java.util.ArrayList;
 
+import com.ngray.jnet.algebra.Vector;
+
 public class SigmoidFunction implements ActivationFunction {
 
 	@Override

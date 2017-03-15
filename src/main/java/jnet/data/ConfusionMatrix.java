@@ -1,7 +1,7 @@
 package jnet.data;
 
-import jnet.net.Matrix;
-import jnet.net.Vector;
+import com.ngray.jnet.algebra.Matrix;
+import com.ngray.jnet.algebra.Vector;
 
 /**
  * This class builds a confusion matrix from network output vectors
@@ -32,7 +32,7 @@ public class ConfusionMatrix {
 	public ConfusionMatrix(Vector expectedOutput, Vector actualOutput)
 	{
 		assert (expectedOutput.getSize() == actualOutput.getSize());
-		matrix = Vector.dyadicProduct(normalize(expectedOutput), normalize(actualOutput));
+		matrix = normalize(expectedOutput).dyadicProduct(normalize(actualOutput));
 		numInstances = 1;
 	}
 	
@@ -49,7 +49,7 @@ public class ConfusionMatrix {
 		assert (expectedOutput.getSize() == actualOutput.getSize());
 		assert (matrix.getNumRows() == actualOutput.getSize()); 
 		
-		matrix = Matrix.add(matrix, Vector.dyadicProduct(normalize(expectedOutput), normalize(actualOutput)));
+		matrix = matrix.add(normalize(expectedOutput).dyadicProduct(normalize(actualOutput)));
 		++numInstances;
 	}
 	
@@ -140,17 +140,8 @@ public class ConfusionMatrix {
 	{
 		assert (v != null);
 		Vector unit = new Vector(v.getSize(), 1.0);
-		double sum = Vector.dotProduct(unit, v);
-		return Vector.multiply((1.0/sum), v);	
-		/*
-		Vector choose = new Vector(v.getSize());
-		for (int i = 0; i < v.getSize(); ++i) {
-			if (v.getElement(i) > 0.5) {
-				choose.setElement(i, 1.0);
-				break;
-			}
-		}
-		return choose;*/
+		double sum = unit.dotProduct(v);
+		return v.multiply(1.0/sum);	
 	}
 	
 }

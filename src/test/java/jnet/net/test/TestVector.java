@@ -2,8 +2,9 @@ package jnet.net.test;
 
 import java.util.ArrayList;
 
-import jnet.net.Matrix;
-import jnet.net.Vector;
+import com.ngray.jnet.algebra.Matrix;
+import com.ngray.jnet.algebra.Vector;
+
 import junit.framework.TestCase;
 
 public class TestVector extends TestCase {
@@ -58,7 +59,7 @@ public class TestVector extends TestCase {
 		Vector left = new Vector(leftList);
 		Vector right = new Vector(rightList);
 		Vector expectedSum = new Vector(sumList);
-		Vector sum = Vector.add(left, right);
+		Vector sum = left.add(right);
 		assert (sum.equals(expectedSum));
 		
 		// test adding two vectors not the same size
@@ -75,7 +76,7 @@ public class TestVector extends TestCase {
 		list.add(2.0);
 		Vector vector = new Vector(list);
 		double scalar = 5.0;
-		Vector result = Vector.multiply(scalar, vector);
+		Vector result = vector.multiply(scalar);
 		assert (result.getElement(0) == 5.0);
 		assert (result.getElement(1) == 10.0);		
 	}
@@ -85,7 +86,7 @@ public class TestVector extends TestCase {
 		Vector left = new Vector(new double[]{1.0, 2.0, 3.0});
 		Vector right = new Vector(new double[]{2.0,3.0,4.0});
 		double expectedResult = 20.0;
-		assert (Vector.dotProduct(left, right) == expectedResult);
+		assert (left.dotProduct(right) == expectedResult);
 	}
 
 	public void testSchurProduct() {
@@ -93,7 +94,7 @@ public class TestVector extends TestCase {
 		Vector left = new Vector(new double[]{1.0, 2.0, 3.0});
 		Vector right = new Vector(new double[]{2.0,3.0,4.0});
 		Vector expectedResult = new Vector(new double[]{2.0, 6.0, 12.0});
-		assert (Vector.schurProduct(left, right).equals(expectedResult));
+		assert (left.schurProduct(right).equals(expectedResult));
 	}
 
 	public void testDyadicProduct() {
@@ -107,6 +108,6 @@ public class TestVector extends TestCase {
 		};
 	
 		Matrix result = new Matrix(prod);
-		assert (Vector.dyadicProduct(left, right).equals(result));
+		assert (left.dyadicProduct(right).equals(result));
 	}
 }

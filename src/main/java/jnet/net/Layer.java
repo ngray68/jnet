@@ -2,6 +2,9 @@ package jnet.net;
 
 import java.util.Random;
 
+import com.ngray.jnet.algebra.Matrix;
+import com.ngray.jnet.algebra.Vector;
+
 public class Layer 
 {
 
@@ -54,7 +57,8 @@ public class Layer
 		if (weights.getNumCols() != input.getSize()) {
 			throw new NetworkException(String.format("Layer expects %d inputs, got %d", weights.getNumCols(), input.getSize()));
 		}
-		weightedInput = Vector.add(Matrix.multiply(weights, input), biases);
+		//weightedInput = Vector.add(Matrix.multiply(weights, input), biases);
+		weightedInput = weights.multiply(input).add(biases);
 	}
 
 	public Matrix getWeights() 
@@ -92,7 +96,7 @@ public class Layer
 
 	public Matrix getWeightGradient() 
 	{
-		return Vector.dyadicProduct(error, previous.getActivation());
+		return error.dyadicProduct(previous.getActivation());
 	}
 
 	public Vector getActivation() 

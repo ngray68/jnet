@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.ngray.jnet.algebra.Vector;
+
 public interface CostFunction {
 
 	final static Map<String, CostFunction> functions = new HashMap<>();

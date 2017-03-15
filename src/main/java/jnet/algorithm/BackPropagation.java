@@ -1,12 +1,13 @@
 package jnet.algorithm;
 
+import com.ngray.jnet.algebra.Matrix;
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.data.DataInstance;
 import jnet.net.CostFunction;
 import jnet.net.Layer;
-import jnet.net.Matrix;
 import jnet.net.Network;
 import jnet.net.NetworkException;
-import jnet.net.Vector;
 
 /**
  * This class implements the back-propagation
@@ -52,14 +53,20 @@ public class BackPropagation {
 		Layer outputLayer = network.getOutputLayer();
 		
 		// output layer error
-		outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
-				outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
-		
+		// outputLayer.setError(Vector.schurProduct(costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs()),
+		//	outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput())));
+		Vector costPrime = costFunction.costPrime(outputLayer.getActivation(), instance.getExpectedOutputs());
+		Vector activation = outputLayer.getActivationFunction().firstDerivative(outputLayer.getWeightedInput());
+		outputLayer.setError(costPrime.schurProduct(activation));
 		Layer next = outputLayer;
 		Layer prev = outputLayer.getPrevious();
 		while (prev != null && prev.getActivationFunction() != null) {
-			prev.setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(next.getWeights()), next.getError()),
-					prev.getActivationFunction().firstDerivative(prev.getWeightedInput())));
+			//prev.setError(Vector.schurProduct(Matrix.multiply(Matrix.transpose(next.getWeights()), next.getError()),
+			//		prev.getActivationFunction().firstDerivative(prev.getWeightedInput())));
+			
+			prev.setError(
+					next.getWeights().transpose().multiply(next.getError()).schurProduct(prev.getActivationFunction().firstDerivative(prev.getWeightedInput()))
+			);
 			
 			next = prev;
 			prev = next.getPrevious();

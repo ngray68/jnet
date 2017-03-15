@@ -5,11 +5,13 @@ import jnet.net.CostFunction;
 import jnet.net.QuadraticCostFunction;
 import jnet.net.SigmoidFunction;
 import jnet.net.NetworkException;
+
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.algorithm.StochasticGradientDescent;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;
 import jnet.net.FeedForwardNetwork;
-import jnet.net.Vector;
 
 public class TestFeedForwardNetwork extends TestCase {
 

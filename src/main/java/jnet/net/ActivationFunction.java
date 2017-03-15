@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.ngray.jnet.algebra.Vector;
+
 /**
  * Network activation functions implement this interface
  * Note that despite the name, this is not a functional interface

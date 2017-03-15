@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.algorithm.LearningAlgorithm;
 import jnet.data.DataInstance;
 import jnet.data.DataSet;

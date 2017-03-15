@@ -1,4 +1,4 @@
-package jnet.net;
+package com.ngray.jnet.algebra;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ import java.util.Random;
  * @author nigelgray
  *
  */
-public class Matrix {
+public final class Matrix {
 	
 	/**
 	 * The elements of the matrix
@@ -27,61 +27,39 @@ public class Matrix {
 	 */
 	private final int numCols;
 	
-	/**
-	 * Return a new Matrix element which is the sum of
-	 * the two matrix parameters lhs and rhs. The supplied
-	 * parameters must be the same size, or an AssertionError
-	 * is thrown
-	 * @param lhs
-	 * @param rhs
-	 * @return sum of lhs and rhs
-	 */
-	public static Matrix add(Matrix lhs, Matrix rhs)
-	{
-		assert (lhs.getNumRows() == rhs.getNumRows());
-		assert (lhs.getNumCols() == rhs.getNumCols());
-		Matrix result = new Matrix(lhs.getNumRows(), lhs.getNumCols());
-		for (int i = 0; i < lhs.getNumRows(); ++i) {
-			for (int j = 0; j < lhs.getNumCols(); ++j) {
-				result.setElement(i, j, lhs.getElement(i, j) + rhs.getElement(i, j));
-			}
-		}
-		return result;
-	}
+	
 	
 	/**
-	 * Multiply the matrix M by the scalar quantity
+	 * Multiply the matrix by the scalar quantity
 	 * @param scalar
-	 * @param M
-	 * @return
+	 * @return new Matrix
 	 */
-	public static Matrix multiply(double scalar, Matrix M)
+	public Matrix multiply(double scalar)
 	{
-		Matrix result = new Matrix(M.getNumRows(), M.getNumCols());
-		for (int i = 0; i < M.getNumRows(); ++i) {
-			for (int j = 0; j < M.getNumCols(); ++j) {
-				result.setElement(i, j, M.getElement(i, j) * scalar);
+		Matrix result = new Matrix(getNumRows(), getNumCols());
+		for (int i = 0; i < getNumRows(); ++i) {
+			for (int j = 0; j < getNumCols(); ++j) {
+				result.setElement(i, j, getElement(i, j) * scalar);
 			}
 		}
 		return result;
 	}
 	
 	/**
-	 * Multiply the vector V by the Matrix M. M must have the
+	 * Multiply the vector V by the Matrix. Matrix must have the
 	 * same number of cols as dimension of V.
-	 * @param M
 	 * @param v
-	 * @return Vector which is the product of M and V
+	 * @return Vector which is the product of this and V
 	 */
-	public static Vector multiply(Matrix M, Vector v) 
+	public Vector multiply(Vector v) 
 	{
-		assert (M.getNumCols() == v.getSize());
+		assert (getNumCols() == v.getSize());
 		
-		Vector result = new Vector(M.getNumRows());
-		for (int i = 0; i < M.getNumRows(); ++i) {		
+		Vector result = new Vector(getNumRows());
+		for (int i = 0; i < getNumRows(); ++i) {		
 			double sum = 0;
-			for (int j = 0; j < M.getNumCols(); ++j) {
-				sum = sum + M.getElement(i, j) * v.getElement(j);
+			for (int j = 0; j < getNumCols(); ++j) {
+				sum = sum + getElement(i, j) * v.getElement(j);
 			}
 			result.setElement(i, sum);				
 		}
@@ -91,15 +69,14 @@ public class Matrix {
 	
 	/**
 	 * Return a new Matrix which is the transpose of M
-	 * @param M
 	 * @return
 	 */
-	public static Matrix transpose(Matrix M) 
+	public Matrix transpose() 
 	{
-		Matrix result = new Matrix(M.getNumCols(), M.getNumRows());
-		for (int i = 0; i < M.getNumCols(); ++i) {
-			for (int j = 0; j < M.getNumRows(); ++j) {
-				result.setElement(i, j, M.getElement(j, i));
+		Matrix result = new Matrix(getNumCols(), getNumRows());
+		for (int i = 0; i < getNumCols(); ++i) {
+			for (int j = 0; j < getNumRows(); ++j) {
+				result.setElement(i, j, getElement(j, i));
 			}
 		}
 		return result;
@@ -224,7 +201,7 @@ public class Matrix {
 	
 	/**
 	 * Add the Matrix rhs to this Matrix
-	 * This matrix contains the sum on completion
+	 * The result is contained in a new Matrix returned
 	 * Matrices must be the same size or an AssertionError
 	 * is thrown
 	 * @param rhs
@@ -234,11 +211,32 @@ public class Matrix {
 	{
 		assert (this.getNumRows() == rhs.getNumRows());
 		assert (this.getNumCols() == rhs.getNumCols());
+		Matrix result = new Matrix(getNumRows(), getNumCols());
 		for (int i = 0; i < this.getNumRows(); ++i) {
 			for (int j = 0; j < this.getNumCols(); ++j) {
-				this.setElement(i, j, this.getElement(i, j) + rhs.getElement(i, j));
+				result.setElement(i, j, this.getElement(i, j) + rhs.getElement(i, j));
 			}
 		}
-		return this;
+		return result;
+	}
+	
+	/**
+	 * Subtract the Matrix rhs from this Matrix
+	 * The result is contained in a new Matrix returned
+	 * Matrices must be the same size or an AssertionError
+	 * is thrown
+	 * @param rhs
+	 * @return
+	 */
+	public Matrix subtract(Matrix rhs) {
+		assert (this.getNumRows() == rhs.getNumRows());
+		assert (this.getNumCols() == rhs.getNumCols());
+		Matrix result = new Matrix(getNumRows(), getNumCols());
+		for (int i = 0; i < this.getNumRows(); ++i) {
+			for (int j = 0; j < this.getNumCols(); ++j) {
+				result.setElement(i, j, this.getElement(i, j) - rhs.getElement(i, j));
+			}
+		}
+		return result;
 	}
 }

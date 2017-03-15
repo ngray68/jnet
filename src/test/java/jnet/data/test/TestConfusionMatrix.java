@@ -7,8 +7,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ngray.jnet.algebra.Vector;
+
 import jnet.data.ConfusionMatrix;
-import jnet.net.Vector;
 
 public class TestConfusionMatrix {
 	

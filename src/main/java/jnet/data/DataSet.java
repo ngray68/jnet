@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jnet.net.Vector;
+import com.ngray.jnet.algebra.Vector;
 
 public class DataSet {
 
