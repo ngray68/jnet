@@ -1,5 +1,6 @@
 package com.ngray.jnet.algebra;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -27,7 +28,19 @@ public final class Matrix {
 	 */
 	private final int numCols;
 	
-	
+	/**
+	 * Construct the identity matrix of size dim x dim
+	 * @param rows
+	 * @param cols
+	 * @return
+	 */
+	public static Matrix identity(int dim) {
+		Matrix ident = new Matrix(dim, dim);
+		for (int i = 0; i < dim; ++i) {
+			ident.setElement(i, i, 1.0);
+		}
+		return ident;
+	}
 	
 	/**
 	 * Multiply the matrix by the scalar quantity
@@ -68,6 +81,30 @@ public final class Matrix {
 	}
 	
 	/**
+	 * Multiply this matrix with the rhs
+	 * @param rhs
+	 * @return
+	 */
+	public Matrix multiply(Matrix rhs) 
+	{
+		assert (getNumCols() == rhs.getNumRows());	
+		Matrix result = new Matrix(getNumRows(), rhs.getNumCols());
+		
+		for (int i = 0; i < result.getNumRows(); ++i) {
+			for (int j = 0; j < result.getNumCols(); ++j) {
+				
+				double value = 0.0;
+				for (int k = 0; k < getNumCols(); ++k) {
+					value += this.getElement(i, k) * rhs.getElement(k, j);
+				}
+				result.setElement(i, j, value);
+			}
+		}
+		return result;
+	
+	}
+	
+	/**
 	 * Return a new Matrix which is the transpose of M
 	 * @return
 	 */
@@ -78,6 +115,19 @@ public final class Matrix {
 			for (int j = 0; j < getNumRows(); ++j) {
 				result.setElement(i, j, getElement(j, i));
 			}
+		}
+		return result;
+	}
+	
+	/**
+	 * If this matrix is square, return a vector of the elements on the diagonal
+	 * @return
+	 */
+	public Vector diagonal() {
+		assert (getNumRows() == getNumCols());
+		Vector result = new Vector(getNumRows());
+		for (int i = 0; i < result.getSize(); ++i) {
+			result.setElement(i, getElement(i,i));
 		}
 		return result;
 	}
@@ -120,6 +170,26 @@ public final class Matrix {
 	}
 	
 	/**
+	 * Construct a numRows x numCols matrix whose elements
+	 * are randomly initialized with a Guassian distribution
+	 * in the interval [-interval, interval]
+	 * @param numRows
+	 * @param numCols
+	 * @param random
+	 */
+	public Matrix(int numRows, int numCols, Random random, double interval)
+	{
+		elements = new double[numRows * numCols];
+		this.numRows = numRows;
+		this.numCols = numCols;
+		for (int i = 0; i < numRows; ++i) {
+			for (int j = 0; j < numCols; ++j) {
+				elements[i * numCols + j] = random.nextGaussian() * interval;
+			}
+		}
+	}
+	
+	/**
 	 * Construct a matrix which is initialized with the 2-dimensional
 	 * array of doubles
 	 * @param values
@@ -140,10 +210,14 @@ public final class Matrix {
 	
 	@Override
 	public boolean equals(Object right) 
-	{
-		Matrix rhs = (Matrix)right;
+	{	
 		if (this == right)
 			return true;
+		
+		if (!(right instanceof Matrix)) 
+			return false;
+		
+		Matrix rhs = (Matrix)right;
 		
 		if (this.getNumRows() != rhs.getNumRows() ||
 			this.getNumCols() != rhs.getNumCols()) {
@@ -157,6 +231,11 @@ public final class Matrix {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(elements);
 	}
 	
 	/**

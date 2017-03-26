@@ -1,5 +1,6 @@
 package com.ngray.jnet.algebra;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -125,6 +126,9 @@ public final class Vector {
 		if (this == right)
 			return true;
 		
+		if (!(right instanceof Vector)) 
+			return false;
+				
 		Vector rhs = (Vector)right;
 		if (this.getSize() != rhs.getSize())
 			return false;
@@ -150,6 +154,11 @@ public final class Vector {
 			}
 		}
 		return str;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(elements);
 	}
 	
 	/**
