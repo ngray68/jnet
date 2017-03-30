@@ -62,7 +62,7 @@ public final class Sequence {
 	 * @throws SequenceException
 	 */
 	public static Sequence copySequence(Sequence rhs) throws SequenceException {
-		return new Sequence(Collections.EMPTY_LIST).join(rhs);
+		return new Sequence(Collections.emptyList()).join(rhs);
 	}
 	
 	/**
@@ -126,6 +126,7 @@ public final class Sequence {
 		Iterator<Vector> iterRhs = rhs.getIterator();
 		while (iterLhs.hasNext()) {
 			result = result && iterLhs.next().equals(iterRhs.next());
+			if (!result) break;
 		}
 		
 		return result;

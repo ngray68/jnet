@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.ngray.jnet.algebra.Vector;
+import com.ngray.jnet.optimizers.RMSPropException;
 import com.ngray.jnet.recurrent.DataSet;
 import com.ngray.jnet.recurrent.DictionaryException;
 import com.ngray.jnet.recurrent.RecurrentNeuralNetwork;
@@ -17,7 +18,7 @@ import com.ngray.jnet.recurrent.Sequence;
 import com.ngray.jnet.recurrent.SequenceException;
 import com.ngray.jnet.recurrent.SequenceGenerator;
 
-public class TestRecurrentNeuralNetwork {
+public final class TestRecurrentNeuralNetwork {
 
 	private static String[] testSentences = {
 			// TODO
@@ -93,9 +94,9 @@ public class TestRecurrentNeuralNetwork {
 	}
 	
 	@Test
-	public void testTrain() throws DictionaryException, SequenceException {
+	public void testTrain() throws DictionaryException, SequenceException, RMSPropException {
 		SequenceGenerator<Character> seqGenerator = Alphabet.createSequenceGenerator();
-		RecurrentNeuralNetwork rnn = new RecurrentNeuralNetwork(200, Alphabet.getSize(), Alphabet.getSize(), 0.01);
+		RecurrentNeuralNetwork rnn = new RecurrentNeuralNetwork(200, Alphabet.getSize(), Alphabet.getSize(), 0.01, 0.9, 0.1, 1.0);
 		List<Sequence> inputs = new ArrayList<>();
 		Map<Sequence, Sequence> outputs = new HashMap<>();
 		for (String s : testData) {
@@ -108,9 +109,9 @@ public class TestRecurrentNeuralNetwork {
 		
 		int epochs = 40;
 		int batchSize = 2;
-		double learningRate = 0.25;
+		double learningRate = 0.001;
 		int maxBackPropSteps = 2;
-		rnn.train(dataSet, epochs, batchSize, learningRate, maxBackPropSteps);
+		rnn.train(dataSet, epochs, batchSize, learningRate, maxBackPropSteps, 0.2);
 		
 		System.out.println("Testing predictive power on training data");
 		Sequence output = rnn.evaluate(seqGenerator.getInputSequence(convert(testData[0])));

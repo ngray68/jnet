@@ -8,7 +8,9 @@ import java.util.Random;
 
 import com.ngray.jnet.algebra.Matrix;
 import com.ngray.jnet.algebra.Vector;
-import com.ngray.jnet.recurrent.test.Alphabet;
+import com.ngray.jnet.optimizers.RMSProp;
+import com.ngray.jnet.optimizers.RMSPropException;
+
 
 /**
  * A single layer RecurrentNeuralNetwork
@@ -18,7 +20,7 @@ import com.ngray.jnet.recurrent.test.Alphabet;
 public final class RecurrentNeuralNetwork {
 	
 	/**
-	 * Matrices U, V, W are the weight matrics of the RNN
+	 * Matrices U, V, W are the weight matrices of the RNN
 	 * Matrix U is of dimension n x m, where:
 	 * n == no of neurons in the network
 	 * m == size of the input vectors for which the network has been constructed.
@@ -35,17 +37,82 @@ public final class RecurrentNeuralNetwork {
 	private Matrix dLossdV;
 	private Matrix dLossdW;
 	
+	private RMSProp rmsPropU;
+	private RMSProp rmsPropV;
+	private RMSProp rmsPropW;
+	
 	private final int networkDimension;
 	private final int inputDimension;
 	private final int outputDimension;
 	private final double softmaxTemp;
+	private double rmsDecay;
+	private double minStepRate;
+	private double maxStepRate;
 	
+	public static class Builder {
+		
+		private int inputDimension;
+		private int outputDimension;
+		private int networkDimension;
+		private double softmaxTemp;
+		private double rmsDecay;
+		private double minStepRate;
+		private double maxStepRate;
+		
+		public Builder() {
+			softmaxTemp = 1.0;
+			rmsDecay = 0.9;
+			minStepRate = 0.1;
+			maxStepRate = 1.0;
+		}
+		public RecurrentNeuralNetwork build() throws RecurrentNeuralNetworkException {
+			if (inputDimension == 0 || outputDimension == 0 || networkDimension == 0) {
+				throw new RecurrentNeuralNetworkException("Please specify non-zero dimension before building the network");
+			}
+			return new RecurrentNeuralNetwork(networkDimension,inputDimension,outputDimension,softmaxTemp,rmsDecay,minStepRate, maxStepRate);
+		}
+		
+		public Builder setInputDimension(int inputDimension) {
+			this.inputDimension = inputDimension;
+			return this;
+		}
+		
+		public Builder setOutputDimension(int outputDimension) {
+			this.outputDimension = outputDimension;
+			return this;
+		}
+		
+		public Builder setNetworkDimension(int networkDimension) {
+			this.networkDimension = networkDimension;
+			return this;
+		}
+		
+		public Builder setSoftmaxTemp(double softmaxTemp) {
+			this.softmaxTemp = softmaxTemp;
+			return this;
+		}
+		
+		public Builder setRMSDecay(double rmsDecay) {
+			this.rmsDecay = rmsDecay;
+			return this;
+		}
+		
+		public Builder setMinStepRate(double minStepRate) {
+			this.minStepRate = minStepRate;
+			return this;
+		}
+		
+		public Builder setMaxStepRate(double maxStepRate) {
+			this.maxStepRate = maxStepRate;
+			return this;
+		}
+	};
 	// Constructors
 	public RecurrentNeuralNetwork(int networkDimension, int inputDimension, int outputDimension) {
-		this(networkDimension, inputDimension, outputDimension, 1.0);
+		this(networkDimension, inputDimension, outputDimension, 1.0, 1.0, 0.1, 1.0);
 	}
 	
-	public RecurrentNeuralNetwork(int networkDimension, int inputDimension, int outputDimension, double softmaxTemp) {
+	public RecurrentNeuralNetwork(int networkDimension, int inputDimension, int outputDimension, double softmaxTemp, double rmsDecay, double minStepRate, double maxStepRate) {
 		U = new Matrix(networkDimension, inputDimension, new Random(), 1.0/Math.sqrt(inputDimension));
 		W = new Matrix(networkDimension, networkDimension, new Random(), 1.0/Math.sqrt(networkDimension));
 		V = new Matrix(outputDimension, networkDimension, new Random(), 1.0/Math.sqrt(networkDimension));
@@ -55,6 +122,9 @@ public final class RecurrentNeuralNetwork {
 		this.inputDimension = inputDimension;
 		this.outputDimension = outputDimension;
 		this.softmaxTemp = softmaxTemp;
+		this.rmsDecay = rmsDecay;
+		this.minStepRate = minStepRate;
+		this.maxStepRate = maxStepRate;
 		initializeGradients();	
 	}
 	
@@ -199,17 +269,31 @@ public final class RecurrentNeuralNetwork {
 	 * @param batchSize
 	 * @param learningRate
 	 * @param maxBackPropSteps
+	 * @throws RMSPropException 
 	 */
-	public void train(DataSet dataSet, int epochs, int batchSize, double learningRate, int maxBackPropSteps) {
+	public void train(DataSet dataSet, int epochs, int batchSize, double learningRate, int maxBackPropSteps, double lossThreshold, Callback...callbacks) throws RMSPropException {
 		
-		List<Sequence> inputs = dataSet.getInputData();		
+		rmsPropU = new RMSProp(networkDimension, inputDimension, rmsDecay, learningRate, minStepRate, maxStepRate);
+		rmsPropW = new RMSProp(networkDimension, networkDimension, rmsDecay, learningRate, minStepRate, maxStepRate);
+		rmsPropV = new RMSProp(outputDimension, networkDimension, rmsDecay, learningRate, minStepRate, maxStepRate);
+		
+		List<Sequence> inputs = dataSet.getInputData();	
+		Collections.shuffle(inputs);
 		for (int i = 0; i < epochs; ++i) {
+			
+			for (Callback callback : callbacks) {
+				callback.call(this);
+			}
 			System.out.println("Epoch " +i);
+
 			Collections.shuffle(inputs);
+			double currentAverageLoss = 0.0;
 			int numBatches = inputs.size()/batchSize;
+			
 			for (int j = 0; j < numBatches; ++j) {
-				System.out.println("Batch " + j);
-				List<Sequence> batch = inputs.subList(j*batchSize, (j+1)*batchSize);
+				System.out.println("Epoch " + i +" Batch " + j);
+				//List<Sequence> batch = inputs.subList(j*batchSize, (j+1)*batchSize);
+				List<Sequence> batch = inputs.subList(j*batchSize, j*batchSize + 5);
 				List<Sequence> expectedOutputs = new ArrayList<>();
 				List<Sequence> outputs = new ArrayList<>();
 				int scaleFactor = 0;
@@ -229,8 +313,17 @@ public final class RecurrentNeuralNetwork {
 					}
 				}
 				
-				double loss = calculateLoss(outputs, expectedOutputs);	
-				System.out.println("Learning rate: " + learningRate + "\tLoss: " + loss);
+				// calculate the loss for this batch
+				double loss = calculateLoss(outputs, expectedOutputs);
+				currentAverageLoss = (currentAverageLoss*j + loss)/(j+1);
+				System.out.println("Learning rate: " + learningRate + "\tLoss: " + loss + "\tRunning Avg: " + currentAverageLoss);
+				// primitive early-stopping
+				if(loss < lossThreshold) {
+					System.out.println("Stopping training");
+					initializeGradients();
+					state.clear();	
+					return;
+				}
 				
 				System.out.println("Adjusting weights");
 				adjustWeights(learningRate, scaleFactor);
@@ -238,13 +331,19 @@ public final class RecurrentNeuralNetwork {
 				state.clear();		
 			}
 		}
+		System.out.println("Training complete");
 	}
 
 	// Private helper functions ////////////////////////////////////////////////////////////////////////
-	private void adjustWeights(double learningRate, double scaleFactor) {
-		U = U.subtract(dLossdU.multiply(learningRate/scaleFactor));
-		V = V.subtract(dLossdV.multiply(learningRate/scaleFactor));
-		W = W.subtract(dLossdW.multiply(learningRate/scaleFactor));
+	private void adjustWeights(double learningRate, double sequenceLength) throws RMSPropException {
+		
+		rmsPropU.updateMeanSquare(dLossdU.multiply(1.0/sequenceLength));
+		rmsPropV.updateMeanSquare(dLossdV.multiply(1.0/sequenceLength));
+		rmsPropW.updateMeanSquare(dLossdW.multiply(1.0/sequenceLength));
+		
+		U = U.subtract(dLossdU.multiply(1.0/sequenceLength).multiplyElementWise(rmsPropU.getGradientMultiplier()));
+		V = V.subtract(dLossdV.multiply(1.0/sequenceLength).multiplyElementWise(rmsPropV.getGradientMultiplier()));
+		W = W.subtract(dLossdW.multiply(1.0/sequenceLength).multiplyElementWise(rmsPropW.getGradientMultiplier()));
 	}
 	
 	/**

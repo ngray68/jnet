@@ -3,6 +3,7 @@ package com.ngray.jnet.algebra;
 import java.util.Arrays;
 import java.util.Random;
 
+
 /**
  * Simple matrix implementation
  * Minimum needed for feed forward network
@@ -67,7 +68,8 @@ public final class Matrix {
 	public Vector multiply(Vector v) 
 	{
 		assert (getNumCols() == v.getSize());
-		
+		return JavaCLWrapper.multiply(this, v);
+		/*
 		Vector result = new Vector(getNumRows());
 		for (int i = 0; i < getNumRows(); ++i) {		
 			double sum = 0;
@@ -78,6 +80,7 @@ public final class Matrix {
 		}
 		
 		return result;
+		*/
 	}
 	
 	/**
@@ -88,6 +91,9 @@ public final class Matrix {
 	public Matrix multiply(Matrix rhs) 
 	{
 		assert (getNumCols() == rhs.getNumRows());	
+		
+		return JavaCLWrapper.multiply(this, rhs);
+		/*
 		Matrix result = new Matrix(getNumRows(), rhs.getNumCols());
 		
 		for (int i = 0; i < result.getNumRows(); ++i) {
@@ -101,7 +107,25 @@ public final class Matrix {
 			}
 		}
 		return result;
+	*/
+	}
 	
+	/**
+	 * Multiply each element in the matrix by the corresponding element in the rhs
+	 * @param rhs
+	 * @return
+	 */
+	public Matrix multiplyElementWise(Matrix rhs) {
+		assert (getNumRows() == rhs.getNumRows());	
+		assert (getNumCols() == rhs.getNumCols());	
+		Matrix result = new Matrix(getNumRows(), getNumCols());
+		
+		for (int i = 0; i < result.getNumRows(); ++i) {
+			for (int j = 0; j < result.getNumCols(); ++j) {	
+					result.setElement(i, j, getElement(i,j) * rhs.getElement(i, j));			
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -146,6 +170,25 @@ public final class Matrix {
 		for (int i = 0; i < numRows; ++i) {
 			for (int j = 0; j < numCols; ++j) {
 				elements[i * numCols + j] = 0.0;
+			}
+		}
+	}
+	
+	/**
+	 * Construct a numRows x numCols matrix whose
+	 * elements are all initialized to the same value
+	 * @param numRows
+	 * @param numCols
+	 * @param value
+	 */
+	public Matrix(int numRows, int numCols, double value)
+	{
+		elements = new double[numRows * numCols];
+		this.numRows = numRows;
+		this.numCols = numCols;
+		for (int i = 0; i < numRows; ++i) {
+			for (int j = 0; j < numCols; ++j) {
+				elements[i * numCols + j] = value;
 			}
 		}
 	}
@@ -314,6 +357,42 @@ public final class Matrix {
 		for (int i = 0; i < this.getNumRows(); ++i) {
 			for (int j = 0; j < this.getNumCols(); ++j) {
 				result.setElement(i, j, this.getElement(i, j) - rhs.getElement(i, j));
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public String toString() {
+		
+		String result = "[\n";
+		for (int i = 0; i < getNumRows(); ++i) {
+			result += "  [ ";
+			for (int j = 0; j < getNumCols(); ++j) {
+				result += this.getElement(i,j);
+				if (j < getNumCols() - 1) {
+					result += ", ";
+				}
+			}
+			result += " ]\n";
+		}
+		result += " ]";
+		return result;
+	}
+	
+	public float[] asFloatArray() {
+		float[] floatArray = new float[elements.length];
+		for (int i = 0; i < elements.length; ++i) {
+			floatArray[i] = (float)elements[i];
+		}
+		return floatArray;
+	}
+	
+	public static Matrix fromFloatArray(float[] floatArray, int rows, int cols) {
+		Matrix result = new Matrix(rows, cols);
+		for (int i = 0; i < rows; ++i) {
+			for (int j = 0; j < rows; ++j) {
+				result.setElement(i, j, (double)floatArray[i*cols + j]);
 			}
 		}
 		return result;

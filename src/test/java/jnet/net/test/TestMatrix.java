@@ -50,7 +50,6 @@ public class TestMatrix extends TestCase {
 	}
 
 	public void testMultiply() {
-		//fail("Not yet implemented");
 		Matrix M = new Matrix(new double[][] {
 			{1.0,2.0,3.0},
 			{4.0,5.0,6.0}

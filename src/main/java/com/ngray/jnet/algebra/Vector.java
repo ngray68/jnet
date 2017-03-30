@@ -273,4 +273,21 @@ public final class Vector {
 		}
 		return dyad;
 	}
+	
+	
+	public float[] asFloatArray() {
+		float[] floatArray = new float[elements.length];
+		for (int i = 0; i < elements.length; ++i) {
+			floatArray[i] = (float)elements[i];
+		}
+		return floatArray;
+	}
+	
+	public static Vector fromFloatArray(float[] floatArray, int size) {
+		Vector result = new Vector(size);
+		for (int i = 0; i < size; ++i) {
+				result.setElement(i, (double)floatArray[i]);
+		}
+		return result;
+	}
 }
